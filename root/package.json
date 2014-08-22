@@ -1,0 +1,25 @@
+{
+  "name": "<%= name %>",
+  "title": "<%= title %>",
+  "description": "<%= description %>",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Danetag/<%= name %>",
+  "author": "Danetag",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Danetag/<%= name %>.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Danetag/<%= name %>/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Danetag/<%= name %>/blob/master/LICENSE-MIT"
+    }
+  ],
+  "keywords": [],
+  "devDependencies": {
+    "gulp": "x"
+  }
+}
