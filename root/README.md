@@ -19,7 +19,6 @@ $ npm install -g gulp
 ```
 $ gem update --system
 $ gem install bundler
-
 ```
 
 - NPM + Gems dependencies
