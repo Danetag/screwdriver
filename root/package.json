@@ -1,25 +1,29 @@
 {
-  "name": "<%= name %>",
-  "title": "<%= title %>",
-  "description": "<%= description %>",
+  "name": "my-project",
+  "title": "My Project",
+  "description": "Best project ever",
   "version": "0.1.0",
-  "homepage": "https://github.com/Danetag/<%= name %>",
+  "homepage": "https://github.com/Danetag/my-project",
   "author": "Danetag",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Danetag/<%= name %>.git"
+    "url": "git://github.com/Danetag/my-project.git"
   },
   "bugs": {
-    "url": "https://github.com/Danetag/<%= name %>/issues"
+    "url": "https://github.com/Danetag/my-project/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/Danetag/<%= name %>/blob/master/LICENSE-MIT"
+      "url": "https://github.com/Danetag/my-project/blob/master/LICENSE-MIT"
     }
   ],
   "keywords": [],
   "devDependencies": {
-    "gulp": "x"
+    "gulp": "x",
+    "gulp-util": "x",
+    "gulp-compass": "x",
+    "gulp-minify-css": "x",
+    "gulp-rename": "x"
   }
 }
