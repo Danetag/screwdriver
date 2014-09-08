@@ -24,6 +24,7 @@
     "gulp-util": "x",
     "gulp-compass": "x",
     "gulp-minify-css": "x",
-    "gulp-rename": "x"
+    "gulp-rename": "x",
+    "gulp-livereload": "x"
   }
 }

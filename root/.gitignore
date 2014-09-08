@@ -2,5 +2,6 @@
 node_modules
 Gemfile.lock
 .sass-cache
+*.map
 *.log
 dist

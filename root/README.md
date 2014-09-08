@@ -4,8 +4,8 @@
 > <%= description %>
 
 ## Featuring
-- Compass
-- SASS
+- Compass + SASS + Source Mapping
+- Livereload
 
 ## Quickstart
 To setup this project on your local machine:
