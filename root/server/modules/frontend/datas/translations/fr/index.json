@@ -1,0 +1,12 @@
+{
+	"route": "accueil",
+	"label": "Accueil",
+	"title":"JS Project  - Accueil",
+	"description" : "JS Project ",
+	"content" : {
+		"header" : {
+			"title" : "JS Project - Accueil"
+		},
+		"body" : "Accueil"
+	}
+}

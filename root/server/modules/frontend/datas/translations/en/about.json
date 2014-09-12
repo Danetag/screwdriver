@@ -1,0 +1,11 @@
+{
+	"route": "about",
+	"label": "About",
+	"title":"JS Project  - About",
+	"description" : "JS Project ",
+	"content": {
+		"header": {
+			"title": "JS Project - About"
+		}
+	}
+}

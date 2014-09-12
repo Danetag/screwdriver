@@ -1,0 +1,27 @@
+{
+	"pages" : [
+		{
+			"name"    : "homepage",
+			"id"      : "homepage",
+			"body_class" : "",
+			"js_var"   : {},
+			"priority": 1,
+			"layout": false,
+			"assets"    : []
+		},
+		{
+			"name"    : "index",
+			"id"      : "index",
+			"body_class" : "",
+			"js_var"   : {},
+			"priority": 0.80,
+			"assets"    : []
+		},
+		{
+			"name"    : "about",
+			"id"      : "about",
+			"priority": 0.80
+		}
+
+	]
+}

@@ -12,6 +12,7 @@ gulp.task('default', function (done) {
     {type: 'input', name: 'description', message: 'Give your project a description', default:"Best project ever"}, // Get app name from arguments by default,
     {type: 'confirm', name: 'moveon', message: 'Continue?'}
   ],
+  
 
   function (answers) {
     if (!answers.moveon) {

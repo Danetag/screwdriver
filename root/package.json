@@ -19,12 +19,21 @@
     }
   ],
   "keywords": [],
+  "dependencies": {
+    "express": "4.x",
+    "express-react-views": "x"
+  },
   "devDependencies": {
     "gulp": "x",
     "gulp-util": "x",
     "gulp-compass": "x",
     "gulp-minify-css": "x",
     "gulp-rename": "x",
-    "gulp-livereload": "x"
+    "gulp-watch": "x",
+    "gulp-livereload": "x",
+    "dot": "x",
+    "i18n": "x",
+    "express-dot": "x",
+    "express-device": "x"
   }
 }

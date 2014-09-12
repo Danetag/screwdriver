@@ -1,0 +1,11 @@
+{
+	"route": "index",
+	"label": "Home",
+	"title":"JS Project  - Index",
+	"description" : "JS Project ",
+	"content" : {
+		"header" : {
+			"title" : "JS Project - Index"
+		}
+	}
+}
