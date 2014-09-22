@@ -1,6 +1,5 @@
 var express = require('express');
 
-
 var routing = (function() {
 
   var Routing = function() {
