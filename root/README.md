@@ -44,6 +44,10 @@ This module provides an API for clients (website, app...).
 
 This module supports multilingue routing, caching and renders views with the Dot.js template engine.
 We use dot.js in order to share templates between both server and client side. 
+We use a /datas folder which handles the configuration of each environnements + a description of each pages for:
+- setting up the controllers
+- setting up the translations
+- generate a JSON file for the front-end side routing.
 
 ## Back-end
 
