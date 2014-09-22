@@ -32,7 +32,6 @@
     "gulp-watch": "x",
     "gulp-livereload": "x",
     "dot": "x",
-    "i18n": "x",
     "express-dot": "x",
     "express-device": "x"
   }
