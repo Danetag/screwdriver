@@ -1,4 +1,4 @@
-var env = require('./datas/env.json');
+var env   = require('./datas/env.json');
 var pages = require('./datas/pages.json');
 
 exports.pages = function() {
@@ -11,6 +11,7 @@ exports.config = function() {
   var environnement = env[node_env];
 
   if (environnement === undefined) {
+    console.log('Environnement "' + node_env + '" not found. Env "development_app" is used instead.');
     environnement = env['development_app'];
   }
 

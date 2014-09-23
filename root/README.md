@@ -36,6 +36,19 @@ The server runs with NodeJS and the Express framework. There's basically 3 modul
 - front-end
 - back-end
 
+Running the server :
+
+```
+$ NODE_ENV=development_app node server/server.js
+```
+
+Available environement:
+
+- development_app: /app folder (with sources)
+- development_dist: /dist folder (ready to staging or production)
+- staging
+- production
+
 ## API
 
 This module provides an API for clients (website, app...).
@@ -48,6 +61,8 @@ We use a /datas folder which handles the configuration of each environnements + 
 - setting up the controllers
 - setting up the translations
 - generate a JSON file for the front-end side routing.
+
+Each environement has its own configuration in /server/modules/frontend/datas/env.json
 
 ## Back-end
 

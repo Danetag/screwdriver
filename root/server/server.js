@@ -1,10 +1,10 @@
 // server.js
-var fs = require('fs');
+var fs      = require('fs');
 var modules = fs.readdirSync('./server/modules/');
 
 var express = require('express');
-var app = express();
-var port = process.env.PORT || 8080;
+var app     = express();
+var port    = process.env.PORT || 8080;
 
 // Each module has his own logic
 // ==============================================

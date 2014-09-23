@@ -30,8 +30,12 @@
     "gulp-rename": "x",
     "gulp-watch": "x",
     "gulp-livereload": "x",
+    "i18n": "x",
     "dot": "x",
     "express-dot": "x",
-    "express-device": "x"
+    "express-device": "x",
+    "browserify" :"x",
+    "vinyl-source-stream": "x",
+    "watchify": "x"
   }
 }

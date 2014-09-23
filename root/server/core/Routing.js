@@ -123,7 +123,6 @@ var routing = (function() {
         route.controller.preAction(req, res);
         route.controller[actionMethod](req, res); // Ugly though.
         route.controller.postAction(req, res);
-
       });
 
     }
