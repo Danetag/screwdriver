@@ -27,6 +27,7 @@
     "gulp-util": "x",
     "gulp-compass": "x",
     "gulp-minify-css": "x",
+    "gulp-uglify": "x",
     "gulp-rename": "x",
     "gulp-watch": "x",
     "gulp-livereload": "x",
@@ -36,6 +37,7 @@
     "express-device": "x",
     "browserify" :"x",
     "vinyl-source-stream": "x",
-    "watchify": "x"
+    "watchify": "x",
+    "jquery": "x"
   }
 }

@@ -1,3 +1,3 @@
 var gulp = require('gulp');
 
-gulp.task('default', ['compass', 'browserify', 'watch']);
+gulp.task('default', ['work', 'watch']);

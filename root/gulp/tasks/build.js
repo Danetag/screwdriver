@@ -1,3 +1,3 @@
 var gulp = require('gulp');
 
-gulp.task('build', ['compass', 'minify']);
+gulp.task('build', ['work', 'minify', 'uglify']);

@@ -4,8 +4,7 @@ var rename = require('gulp-rename');
 
 gulp.task('minify', function() {
   gulp.src('./app/css/app.css')
-  .pipe(rename({ suffix: '.min' }))
+  //.pipe(rename({ suffix: '.min' }))
   .pipe(minifycss())
   .pipe(gulp.dest('dist/css'));
-  
 });

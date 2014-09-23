@@ -6,8 +6,9 @@
 ## Featuring
 - Compass + SASS + Source Mapping
 - Livereload
-- Server NodeJS(Express)
+- Server NodeJS (Express)
 - Dot.js (templating) both server and client side.
+- Browserify + Source Mapping
 
 ## Quickstart
 To setup this project on your local machine:
