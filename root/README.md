@@ -46,7 +46,7 @@ $ NODE_ENV=development_app node server/server.js
 Available environement:
 
 - development_app: /app folder (with sources)
-- development_dist: /dist folder (ready to staging or production)
+- development_dist: /dist folder (ready for staging or production)
 - staging
 - production
 

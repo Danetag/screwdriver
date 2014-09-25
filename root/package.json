@@ -37,7 +37,6 @@
     "express-device": "x",
     "browserify" :"x",
     "vinyl-source-stream": "x",
-    "watchify": "x",
     "jquery": "x"
   }
 }

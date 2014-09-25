@@ -1,8 +1,7 @@
 var gulp          = require('gulp');
     browserify    = require('browserify'),
     source        = require('vinyl-source-stream'),
-    livereload    = require('gulp-livereload'),
-    watchify      = require('watchify');
+    livereload    = require('gulp-livereload')
 
 gulp.task('browserify', function() {
   
@@ -22,5 +21,4 @@ gulp.task('browserify', function() {
   // Specify the output destination
   .pipe(gulp.dest('./app/js'))
   .pipe(livereload({ auto: false }));
-
 });

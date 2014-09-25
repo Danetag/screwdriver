@@ -1,6 +1,9 @@
 'use strict';
 
-var $   = require('jquery');
+var $        = require('jquery');
+var Backbone = require('backbone');
+
+Backbone.$ = $;
 
 var main = (function() {
 
@@ -13,7 +16,7 @@ var main = (function() {
 
     onReady: function() {
 
-      console.log("--- onReady ---");
+      console.log("--- ready", this);
 
     }
   }
