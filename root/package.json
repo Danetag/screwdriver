@@ -27,8 +27,8 @@
     "gulp-util": "x",
     "gulp-compass": "x",
     "gulp-minify-css": "x",
-    "gulp-uglify": "x",
     "gulp-rename": "x",
+    "gulp-uglify": "x",
     "gulp-watch": "x",
     "gulp-livereload": "x",
     "i18n": "x",
@@ -36,7 +36,28 @@
     "express-dot": "x",
     "express-device": "x",
     "browserify" :"x",
+    "browserify-shim": "x",
     "vinyl-source-stream": "x",
-    "jquery": "x"
+    "jquery": "x",
+    "backbone": "x"
+  },
+  "browser": {
+    "signals": "./app/js/vendor/signals.min.js",
+    "createjs": "./app/js/vendor/preloadjs-NEXT.min.js",
+    "TweenMax": "./app/js/vendor/TweenMax.min.js",
+    "Modernizr": "./app/js/vendor/modernizr.custom.js",
+    "Detectizr": "./app/js/vendor/detectizr.min.js"
+  },
+  "browserify-shim": {
+    "signals": { "exports": "signals"},
+    "createjs": { "exports": "createjs"},
+    "TweenMax": { "exports": "TweenMax"},
+    "Modernizr": { "exports": "Modernizr"},
+    "Detectizr": { "exports": "Detectizr"}
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
   }
 }
