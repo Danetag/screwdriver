@@ -1,4 +1,4 @@
-#skrewdriver
+#screwdriver
 
 > HTML5 Boilerplate, gulp starter.
 
@@ -18,5 +18,5 @@ $ npm link path/to/the/generator
 
 Create a new project with the generator:
 ```
-$ slush skrewdriver
+$ slush screwdriver
 ```
