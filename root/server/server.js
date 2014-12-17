@@ -6,6 +6,12 @@ var express = require('express');
 var app     = express();
 var port    = process.env.PORT || 8080;
 
+
+// set up a global object
+global.APP = {};
+global.APP.dirServer = __dirname;
+global.APP.basePath = global.APP.dirServer.replace('/server', '');
+
 // Each module has his own logic
 // ==============================================
 modules.forEach(function(module) {

@@ -23,41 +23,28 @@
     "express": "4.x"
   },
   "devDependencies": {
-    "gulp": "x",
-    "gulp-util": "x",
-    "gulp-compass": "x",
-    "gulp-minify-css": "x",
-    "gulp-rename": "x",
-    "gulp-uglify": "x",
-    "gulp-watch": "x",
-    "gulp-livereload": "x",
-    "i18n": "x",
+    "backbone": "x",
+    "browserify": "x",
     "dot": "x",
-    "express-dot": "x",
+    "dot-view": "x",
+    "event-stream": "x",
     "express-device": "x",
-    "browserify" :"x",
-    "browserify-shim": "x",
-    "vinyl-source-stream": "x",
+    "gulp": "x",
+    "gulp-compass": "x",
+    "gulp-concat": "x",
+    "gulp-imagemin": "x",
+    "gulp-inject": "x",
+    "gulp-jshint": "x",
+    "gulp-livereload": "x",
+    "gulp-minify-css": "x",
+    "gulp-plumber": "x",
+    "gulp-rename": "x",
+    "gulp-rimraf": "x",
+    "gulp-uglify": "x",
+    "gulp-util": "x",
+    "gulp-watch": "x",
+    "i18n": "x",
     "jquery": "x",
-    "backbone": "x"
-  },
-  "browser": {
-    "signals": "./app/js/vendor/signals.min.js",
-    "createjs": "./app/js/vendor/preloadjs-NEXT.min.js",
-    "TweenMax": "./app/js/vendor/TweenMax.min.js",
-    "Modernizr": "./app/js/vendor/modernizr.custom.js",
-    "Detectizr": "./app/js/vendor/detectizr.min.js"
-  },
-  "browserify-shim": {
-    "signals": { "exports": "signals"},
-    "createjs": { "exports": "createjs"},
-    "TweenMax": { "exports": "TweenMax"},
-    "Modernizr": { "exports": "Modernizr"},
-    "Detectizr": { "exports": "Detectizr"}
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
+    "vinyl-source-stream": "x"
   }
 }

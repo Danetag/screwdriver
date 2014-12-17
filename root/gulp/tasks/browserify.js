@@ -1,24 +1,24 @@
 var gulp          = require('gulp');
     browserify    = require('browserify'),
     source        = require('vinyl-source-stream'),
-    livereload    = require('gulp-livereload')
+    stringify     = require('stringify');
+    livereload    = require('gulp-livereload'),
+    plumber = require('gulp-plumber');
 
-gulp.task('browserify', function() {
+gulp.task('browserify', function(cb, err) {
   
-  gulp.src('./app/js/project/**/*.js')
-  .pipe(browserify({
-    // Specify the entry point of your app
-    entries: './app/js/project/main.js',
-    // Add file extentions to make optional in your requires
-    extensions: ['.js'],
-    // Enable source maps!
+  gulp.src('app/scripts/project/**/*.js')
+  .pipe(plumber())
+  .pipe(browserify({ 
+    extensions: ['.js', '.html'], 
+    paths: [ "app/scripts/project/", "app/scripts/", "app/scripts/project/app/", "node_modules"], 
+    entries: 'main',
+    //transform: ["stringify"],
     debug: true
-  }).bundle())
-  // Use vinyl-source-stream to make the
-  // stream gulp compatible. Specifiy the
-  // desired output filename here.
-  .pipe(source('app.js'))
-  // Specify the output destination
-  .pipe(gulp.dest('./app/js'))
+  }).transform(stringify()).bundle())
+  .pipe(source('project.js'))
+  .pipe(gulp.dest('app/js'))
   .pipe(livereload({ auto: false }));
+  cb(err);
+  
 });

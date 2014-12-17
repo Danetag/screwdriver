@@ -1,9 +1,10 @@
-var path    = require('path');
-var common  = require('./common');
-var routes  = require('./routes');
-var express = require('express');
-var i18n    = require('i18n');
-var fs      = require('fs');
+var path    = require('path'),
+    common  = require('./common'),
+    routes  = require('./routes'),
+    express = require('express'),
+    i18n    = require('i18n'),
+    dot     = require('dot-view'),
+    fs      = require('fs');
 
 var config  = common.config();
 var pages   = common.pages();
@@ -17,6 +18,9 @@ var mod = (function() {
 
     config.translationPath = __dirname + '/datas/translations/';
     config.baseLanguage    = "en";
+    config.tplPath = global.APP.basePath + '/tpl';
+    config.tplLayoutPath = config.tplPath + '/layout';
+    config.tplPartialPath = config.tplPath + '/partial';
 
   }
 
@@ -85,10 +89,11 @@ var mod = (function() {
 
   var initViews_ = function() {
 
-    this.app.set('views', path.join(__dirname, 'views'));
+    //this.app.set('views', path.join(__dirname, 'views'));
+    this.app.set('views', config.tplPath);
     this.app.set('view engine', 'html');
 
-    this.app.engine('html', require('express-dot').__express);
+    this.app.engine('html', dot.__express);
 
     // Device detection
     this.app.use(require('express-device').capture());

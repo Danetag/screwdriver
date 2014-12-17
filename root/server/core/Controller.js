@@ -1,3 +1,5 @@
+var View    = require('dot-view').View;
+
 var controller = (function() {
 
   var Controller = function() {
@@ -68,7 +70,8 @@ var controller = (function() {
       this.datas.lang = this.lang;
 
       // Display layout?
-      this.datas.layout = this.page.layout;
+      if (this.page.hasLayout == undefined || this.page.hasLayout)
+        this.datas.layout = new View(this.config.tplLayoutPath, 'layout.html', this.datas);
 
     }
 

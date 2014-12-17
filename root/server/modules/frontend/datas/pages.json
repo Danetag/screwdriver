@@ -6,7 +6,7 @@
 			"body_class" : "",
 			"js_var"   : {},
 			"priority": 1,
-			"layout": false,
+			"hasLayout": false,
 			"assets"    : []
 		},
 		{

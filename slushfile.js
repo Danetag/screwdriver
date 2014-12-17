@@ -18,6 +18,7 @@ gulp.task('default', function (done) {
     if (!answers.moveon) {
       return done();
     }
+
     gulp.src(__dirname + '/root/**')  // Note use of __dirname to be relative to generator
       .pipe(template(answers))        // Lodash template support
       .pipe(gulp.dest('./'))          // Without __dirname here = relative to cwd
@@ -25,6 +26,7 @@ gulp.task('default', function (done) {
       .on('finish', function () {
         done();                       // Finished!
       });
+
   });
 
 });

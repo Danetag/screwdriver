@@ -1,0 +1,7 @@
+<h1>Server error!</h1>
+<h2>Infos</h2>
+<ul>
+  {{ for(var prop in it.error) { }}
+  <li>{{=prop}}: {{=it.error[prop]}}</li>
+  {{ } }}
+</ul>
