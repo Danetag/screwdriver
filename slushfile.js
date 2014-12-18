@@ -6,9 +6,8 @@ var gulp     = require('gulp'),
 gulp.task('default', function (done) {
 
   inquirer.prompt([
-    {type: 'input', name: 'name', message: 'Give your project a name', default: "my-project"},
-    {type: 'input', name: 'title', message: 'Give your project a title', default: "My Project"}, 
-    {type: 'input', name: 'namespace', message: 'Namespace of the project', default: "NS"}, // Get app name from arguments by default
+    {type: 'input', name: 'name', message: 'Give your project a name (lowercase)', default: "my-project"},
+    {type: 'input', name: 'title', message: 'Give your project a title', default: "My Project"},
     {type: 'input', name: 'description', message: 'Give your project a description', default:"Best project ever"}, // Get app name from arguments by default,
     {type: 'confirm', name: 'moveon', message: 'Continue?'}
   ],

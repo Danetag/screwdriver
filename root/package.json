@@ -30,7 +30,6 @@
     "event-stream": "x",
     "express-device": "x",
     "gulp": "x",
-    "gulp-compass": "x",
     "gulp-concat": "x",
     "gulp-imagemin": "x",
     "gulp-inject": "x",
@@ -40,11 +39,14 @@
     "gulp-plumber": "x",
     "gulp-rename": "x",
     "gulp-rimraf": "x",
+    "gulp-stylus": "x",
     "gulp-uglify": "x",
     "gulp-util": "x",
     "gulp-watch": "x",
     "i18n": "x",
     "jquery": "x",
+    "nib": "x",
+    "stringify": "x",
     "vinyl-source-stream": "x"
   }
 }

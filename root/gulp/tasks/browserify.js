@@ -3,7 +3,7 @@ var gulp          = require('gulp');
     source        = require('vinyl-source-stream'),
     stringify     = require('stringify');
     livereload    = require('gulp-livereload'),
-    plumber = require('gulp-plumber');
+    plumber       = require('gulp-plumber');
 
 gulp.task('browserify', function(cb, err) {
   
