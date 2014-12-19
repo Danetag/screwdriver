@@ -110,9 +110,10 @@ var routing = (function() {
 
       var rt = {
         route: url,
-        id: route.controller.page.id
+        id: route.controller.id,
+        frontRouting: (route.frontRouting != undefined) ? route.frontRouting : true
       };
-
+      
       this.aLangRoutes[lang].push(rt);
 
       // Finally, add a new route

@@ -17,7 +17,8 @@ var frontRouter = (function() {
     this.addRoute({
       route: '/',
       controller: 'homepage',
-      action: 'index'
+      action: 'index',
+      frontRouting: false
     });
 
     this.addRoute({
@@ -32,6 +33,13 @@ var frontRouter = (function() {
       lang: ':@lang',
       controller: 'about',
       action: 'index'
+    });
+
+    this.addRoute({
+      route: '/routes.json',
+      controller: 'json',
+      action: 'routes',
+      frontRouting: false
     });
     
   } 

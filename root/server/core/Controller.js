@@ -7,16 +7,30 @@ var controller = (function() {
     this.config = null;
     this.lang = 'en';
     this.datas = {};
+    this.id = null;
   }
 
   Controller.prototype = {
 
-    init: function(page, config) {
+    init: function(id, page, config) {
+      this.id = id;
       this.page = page;
       this.config = config;
     },
 
     preAction: function(req, res) {
+      
+      this.setBaseUrl(req);
+      this.setBasicDatas(req);
+      this.setPageDatas(req);
+
+    },
+
+    postAction: function(req, res) {
+      req.setLocale(this.lang);
+    },
+
+    setBaseUrl: function(req) {
 
       this.lang = req.params.lang;
 
@@ -36,13 +50,6 @@ var controller = (function() {
       } 
         
       this.config.base_url = baseUrl;
-
-      this.setBasicDatas(req);
-
-    },
-
-    postAction: function(req, res) {
-      req.setLocale(this.lang);
     },
 
     setBasicDatas: function(req) {
@@ -56,18 +63,24 @@ var controller = (function() {
         this.datas[prop] = this.config[prop];
       }
 
+      // Lang
+      this.datas.lang = this.lang;
+      
+      // get device
+      this.datas.device = req.device.type;
+      this.datas.is_mobile = (this.datas.device == 'phone') ? true : false;
+      
+    },
+
+    setPageDatas: function(req) {
+
+      if (this.page == null) return;
+
       // get translated datas
       var translatedDatas = require(this.config.translationPath + this.lang + '/' + this.page.id + '.json');
       for (var prop in translatedDatas) {
         this.datas[prop] = translatedDatas[prop];
       }
-
-      // get device
-      this.datas.device = req.device.type;
-      this.datas.is_mobile = (this.datas.device == 'phone') ? true : false;
-
-      // Lang
-      this.datas.lang = this.lang;
 
       // Display layout?
       if (this.page.hasLayout == undefined || this.page.hasLayout)

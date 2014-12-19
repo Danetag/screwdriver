@@ -1,10 +1,11 @@
-var path    = require('path'),
-    common  = require('./common'),
-    routes  = require('./routes'),
-    express = require('express'),
-    i18n    = require('i18n'),
-    dot     = require('dot-view'),
-    fs      = require('fs');
+var path        = require('path'),
+    onlyScripts = require('../../util/scriptFilter');
+    common      = require('./common'),
+    routes      = require('./routes'),
+    express     = require('express'),
+    i18n        = require('i18n'),
+    dot         = require('dot-view'),
+    fs          = require('fs');
 
 var config  = common.config();
 var pages   = common.pages();
@@ -74,16 +75,31 @@ var mod = (function() {
 
   var initControllers_ = function() {
 
-    for (var i in pages) {
+    var controllers = fs.readdirSync(__dirname + '/controllers/').filter(onlyScripts); //Filter out DS_STORE files for instance
+    var self = this;
 
-      var page = pages[i];
+    controllers.forEach(function(ctrl) {
 
-      var controller = require('./controllers/' + page.id + 'Controller');
-      controller.init(page, config);
+      var controller = require('./controllers/' + ctrl);
 
-      this.aControllers[page.id] = controller;
+      // Is a page? 
+      var pageId = ctrl.replace('Controller.js', '');
+      var page = null;
+      for (var i in pages) {
 
-    }
+        var p = pages[i];
+
+        if(p.id === pageId) {
+          page = p;
+          break;
+        }
+      }
+
+      controller.init(pageId, page, config);
+
+      self.aControllers[pageId] = controller;
+
+    });
 
   }
 
