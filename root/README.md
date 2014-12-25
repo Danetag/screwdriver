@@ -4,7 +4,7 @@
 > <%= description %>
 
 ## Featuring
-- Compass + SASS + Source Mapping
+- Stylus + Source Mapping
 - Livereload
 - Server NodeJS (Express)
 - Dot.js (templating) both server and client side.
@@ -18,15 +18,8 @@ To setup this project on your local machine:
 $ npm install -g gulp
 ```
 
-- Bundler (Bundle Gems)
+- NPM dependencies (should have been run before wth Slush)
 ```
-$ gem update --system
-$ gem install bundler
-```
-
-- NPM + Gems dependencies
-```
-bundle install
 npm install
 ```
 
@@ -43,7 +36,7 @@ Running the server :
 $ NODE_ENV=development_app node server/server.js
 ```
 
-Available environement:
+Available environements:
 
 - development_app: /app folder (with sources)
 - development_dist: /dist folder (ready for staging or production)
@@ -56,9 +49,9 @@ This module provides an API for clients (website, app...).
 
 ## Front-end
 
-This module supports multilingue routing, caching and renders views with the Dot.js template engine.
+This module supports multilingue routing, caching and rendered views using the Dot.js template engine.
 We use dot.js in order to share templates between both server and client side. 
-We use a /datas folder which handles the configuration of each environnements + a description of each pages for:
+We use a /datas folder which handles the configuration of each environnement + a description of each page for:
 - setting up the controllers
 - setting up the translations
 - generate a JSON file for the front-end side routing.
