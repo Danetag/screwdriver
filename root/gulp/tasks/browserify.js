@@ -1,7 +1,7 @@
 var gulp          = require('gulp');
     browserify    = require('browserify'),
     source        = require('vinyl-source-stream'),
-    stringify     = require('stringify');
+    stringify     = require('stringify'),
     livereload    = require('gulp-livereload'),
     plumber       = require('gulp-plumber');
 
@@ -10,10 +10,10 @@ gulp.task('browserify', function(cb, err) {
   gulp.src('app/scripts/project/**/*.js')
   .pipe(plumber())
   .pipe(browserify({ 
-    extensions: ['.js', '.html'], 
-    paths: [ "app/scripts/project/", "app/scripts/", "app/scripts/project/app/", "node_modules"], 
+    extensions: ['.html'], 
+    paths: [ "app/scripts/project/", "app/scripts/project/app/", "node_modules", "tpl"], 
     entries: 'main',
-    //transform: ["stringify"],
+    //transform: ["dotify/lib"],
     debug: true
   }).transform(stringify()).bundle())
   .pipe(source('project.js'))

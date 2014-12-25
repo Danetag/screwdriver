@@ -8,6 +8,7 @@ var $               = require('jquery'),
     EVENT           = require('event/event'),
     AbstractPage    = require('abstract/page'),
     _               = require('underscore'),
+    tools           = require('tools/tools'),
     PageManager     = require('page/pageManager');
 
 var MainPage = function (){
@@ -131,9 +132,6 @@ var _currentPageViewInit = function() {
   _onResize.call(this);
   _onOrientationChange.call(this);
 
-  // Special action here to correctly place the slide
-  this.view.sliderView.goToSection(this.pageManager.currentPage.id, true);
-
   this.loader.loaderView.hide();
 }
 
@@ -152,6 +150,7 @@ var _currentPageViewShown = function() {
   this.loader = null;
   
   // We are happy.
+  console.log('ALL DONE !');
 }
 
 /* Events */
@@ -159,10 +158,8 @@ var _currentPageViewShown = function() {
 var _bindEvents = function() {
   window.addEventListener("resize",  $.proxy(_onResize, this), false);
   document.addEventListener("mouseout",  $.proxy(_onMouseOut, this), false);
-  requestAnimFrame(_onRAF.bind(this));
-
-  this.listenTo(this.view, EVENT.GO_TO_CONTENT, $.proxy(_goToContent, this));
-  this.listenTo(this.pageManager, EVENT.EXPLORE, $.proxy(_explore, this));
+  
+  window.requestAnimationFrame(_onRAF.bind(this));
 
   if("onorientationchange" in window) {
     window.addEventListener("orientationchange", $.proxy(_onOrientationChange, this), false);
@@ -170,8 +167,6 @@ var _bindEvents = function() {
 }
 
 var _onOrientationChange = function() {
-
-  console.log('_onOrientationChange')
 
   var viewport = {
     width  : $(window).width(),
@@ -185,26 +180,6 @@ var _onOrientationChange = function() {
   this.view.orientationChange(viewport);
 }
 
-var _goToContent = function(e) {
-
-  var id = e.id;
-  if (this.pageManager.currentPage.id == id) {
-    this.pageManager.currentPage.view.goToContent();
-  } else {
-    // trigger through the menu. SEO BITCH
-    this.view.menuView.navigateById(id);
-  }
-
-}
-
-var _explore = function(){
-  
-  TweenLite.to(window, 0.7, {scrollTo:{y:0, x:0}, ease:Power2.easeInOut,onComplete:function(){
-    this.view.toggleMenu();
-    }.bind(this)
-  });
-
-}
 
 var _onMouseOut = function(e) {
   var from = e.relatedTarget || e.toElement;
@@ -244,7 +219,7 @@ var _onRAF = function() {
 
   if (this.view != null) this.view.update();
 
-  requestAnimFrame(_onRAF.bind(this));
+  window.requestAnimationFrame(_onRAF.bind(this));
 
 }
 

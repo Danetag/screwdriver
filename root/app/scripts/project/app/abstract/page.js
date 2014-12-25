@@ -9,8 +9,6 @@ var $         = require('jquery'),
 
 var AbstractPage = function (){
 
-  //console.log('Backbone.Events', Backbone.Events);
-
   _.extend(this, Backbone.Events);
 
   /*

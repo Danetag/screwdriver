@@ -3,7 +3,6 @@
 var $         					= require('jquery'),
     AbstractLoaderView  = require('abstract/loader/loaderView'),
     Backbone  					= require('backbone'),
-    _                   = require('underscore'),
     EVENT               = require('event/event');
 
 var LoaderViewEmpty = AbstractLoaderView.extend(new function (){

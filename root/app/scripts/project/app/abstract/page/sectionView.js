@@ -3,22 +3,11 @@
 var $                 = require('jquery'),
     EVENT             = require('event/event'),
     AbstractPageView  = require('abstract/page/pageView'),
-    Carousel          = require('abstract/carousel/carouselView'),
-    FooterView        = require('page/main/views/footerView'),
+    //Carousel          = require('abstract/carousel/carouselView'),
+    //FooterView        = require('page/main/views/footerView'),
     Backbone          = require('backbone');
 
 var SectionView = AbstractPageView.extend(new function (){
-
-  /**
-   * Carousel
-   * @type {abstract/carousel/carouselView}
-   * @private
-   */
-  this.carousel = null;
-
-  this.footerView = null;
-
-  this.percentPositionInit = false;
 
 
   /**
@@ -30,26 +19,24 @@ var SectionView = AbstractPageView.extend(new function (){
 
   this.initDOM = function() {
     this.$header = this.$el.find('header');
-    this.$contentTips = this.$el.find('header');
-    this.$stepSection = this.$el.find('.steps-section');
     
-    this.initCarousel();
-    this.initFooter();
+    //this.initCarousel();
+    //this.initFooter();
   }
 
   this.initCarousel = function() {
-    this.carousel = new Carousel({carousel: this.$el.find('.carousel')});
+    //this.carousel = new Carousel({carousel: this.$el.find('.carousel')});
   }
 
   this.initFooter = function() {
-    this.footerView = new FooterView();
+    //this.footerView = new FooterView();
     this.$el.append(this.footerView.$el);
   }
 
   this.onResize = function() {
-    this.$header.height(this.viewport.height);
+    //this.$header.height(this.viewport.height);
 
-    this.carousel.resize(this.viewport);
+    //this.carousel.resize(this.viewport);
 
      /* Custom */
 
@@ -88,15 +75,15 @@ var SectionView = AbstractPageView.extend(new function (){
   }
 
   var _initEl = function() {
-    if (this.percentPositionInit) return;
+    //if (this.percentPositionInit) return;
 
-    this.percentPositionInit = true;
+    //this.percentPositionInit = true;
 
-    var height = parseInt(this.$stepSection.height());
+    //var height = parseInt(this.$stepSection.height());
 
-    console.log('>>>height', height)
+    //console.log('>>>height', height)
 
-    this.$stepSection.data('height', height);
+    //this.$stepSection.data('height', height);
   }
 
   this.show = function() {
@@ -108,7 +95,7 @@ var SectionView = AbstractPageView.extend(new function (){
   }
 
   this.onUpdate = function() {
-    if (this.carousel != null) this.carousel.update();
+    //if (this.carousel != null) this.carousel.update();
   }
 
   this.goToContent = function(callback) {
@@ -120,11 +107,11 @@ var SectionView = AbstractPageView.extend(new function (){
 
   this.dispose = function() {
 
-    this.footerView.dispose();
-    this.footerView = null;
+    //this.footerView.dispose();
+    //this.footerView = null;
 
-    this.carousel.dispose();
-    this.carousel = null;
+    //this.carousel.dispose();
+    //this.carousel = null;
 
     AbstractPageView.prototype.dispose.call(this);
   }
@@ -133,7 +120,7 @@ var SectionView = AbstractPageView.extend(new function (){
   var _onShown = function() {
     this.canUpdate = true;
 
-    this.carousel.show();
+    //this.carousel.show();
 
     this.trigger(EVENT.SHOWN);
   }

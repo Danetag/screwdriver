@@ -49,7 +49,7 @@ var App = Backbone.View.extend(new function (){
     this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this));
 
     this.loader.addItem({ src: "/datas/config.json" , id:"config" })
-    this.loader.addItem({ src: "/img/loader/background.jpg" , id:"background" })
+    this.loader.addItem({ src: "/routes.json" , id:"routes" })
 
     this.loader.start();
   }
@@ -57,12 +57,13 @@ var App = Backbone.View.extend(new function (){
   var _loaderComplete = function(e) {
 
     this.config.pages = this.loader.getItem('config').result;
+    this.config.routes = this.loader.getItem('routes').result;
 
     this.loader.dispose();
     this.loader = null;
 
     this.router = new Router();
-    this.router.init();
+    this.router.init(this.config.routes);
 
     Backbone.history.start({
       pushState: true,

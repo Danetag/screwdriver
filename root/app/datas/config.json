@@ -1,0 +1,13 @@
+{
+  "mainpage": {
+    "assets": [
+      
+    ]
+  },
+  "index": {
+    "assets": [{ "src":"/img/test.jpg", "type": "image"}]
+  },
+  "about": {
+    "assets": [{ "src":"/img/test.jpg", "type": "image"}]
+  }
+}

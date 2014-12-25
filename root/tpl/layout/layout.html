@@ -39,9 +39,19 @@
 
         <script type="text/javascript">
 
-            var lang           = "{{= it.lang }}";
-            var baseURL        = "{{= it.base_url }}";
+            document.documentElement.className ="has-js " + document.documentElement.className;
 
+            var CONF = {};
+
+            CONF.isMobileFromUA = {{= it.is_mobile }};
+            CONF.lang           = "{{= it.lang }}";
+            CONF.baseUrl        = "{{= it.base_url }}";
+            CONF.root           = "";
+
+            if (CONF.isMobileFromUA) {
+               window.location = CONF.baseUrl + "/m/";
+            }   
+     
         </script>
 
         <!-- CSS -->
@@ -49,10 +59,23 @@
 
     </head>
   <body>
-    
-    {{#def._content}}
 
+    <nav id="menu">
+        <ul>
+            <li><a href="{{= it.base_url }}/" data-id="index">Index</a></li>
+        </ul>
+    </nav>
+    
+    <div id="content">
+        {{#def._content}}
+    </div>
+
+    {{? it.use_src === 0 }}
     <script src="{{= it.base_url }}/js/app.js"></script>
+    {{??}}
+    <script src="{{= it.base_url }}/js/lib.js"></script>
+    <script src="{{= it.base_url }}/js/project.js"></script>
+    {{?}}
 
   </body>
 </html>

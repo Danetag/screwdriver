@@ -28,7 +28,7 @@ var PageView = AbstractView.extend(new function (){
 
   /*
    * template
-   * @type {_.template}
+   * @type {dot template}
    */
   this.template = null;
 

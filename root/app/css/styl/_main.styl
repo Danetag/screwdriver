@@ -3,41 +3,35 @@ html {
 }
 
 body {
+	ffregular();
 	-webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color:#FFF;
-  font-size: 100%;
-  margin: 0;
-
-}
-
-li {
-	list-style: none;
-}
-
-ul {
+	-moz-osx-font-smoothing: grayscale;
+	background-color:#FFF;
+	font-size: 100%;
 	margin: 0;
-	padding: 0;
+	
+	&.init {
+		
+	    #content,
+	    #menu,
+	    h1 {
+	      display: block;
+	    }
+
+ 	}
+
 }
 
-.table {
-	display: table;
-	height: 100%;
-	width: 100%;
+.has-js body {
+	background-color:#000;
+	
+	&.init {
+		background-color:#FFF;
+	}
 }
 
-.table-cell {
-	display: table-cell;
-	vertical-align: middle;
+.has-js #content,
+.has-js #menu,
+.has-js h1{
+  display: none;
 }
-
-.content-responsive,
-.full-size {
-	bottom: 0;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-}
-
-

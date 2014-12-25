@@ -3,9 +3,9 @@
 var $         					= require('jquery'),
     AbstractLoaderView  = require('abstract/loader/loaderView'),
     Backbone  					= require('backbone'),
-    _                   = require('underscore'),
     EVENT               = require('event/event'),
-    LoaderBasicTpl      = require('tpl/loader/basic');
+    dot                 = require('dot'),
+    LoaderBasicTpl      = require('loader/basic.html');
 
 var LoaderViewBasic = AbstractLoaderView.extend(new function (){
 
@@ -13,7 +13,7 @@ var LoaderViewBasic = AbstractLoaderView.extend(new function (){
    * Template of a basic loader
    * @type {template}
    */
-  this.template = _.template(LoaderBasicTpl);
+  this.template = dot.template(LoaderBasicTpl);
 
   /*
    * SO you can hide when the 100% have been reched

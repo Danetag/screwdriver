@@ -3,8 +3,8 @@
 var $               = require('jquery'),
     AbstractView    = require('abstract/view'),
     Backbone        = require('backbone'),
-    Config        = require('config/config')
-
+    dot             = require('dot'),
+    Config          = require('config/config')
 
 var AbstractLoaderView = AbstractView.extend(new function (){
 

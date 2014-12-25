@@ -18,12 +18,15 @@ var json = (function() {
   JsonController.prototype.routesAction = function(req, res) {
 
     var routes = {};
+    routes.all = {};
+    routes.pages = {};
 
     for (var lang in Routes.aLangRoutes) {
 
       var aLangRoutes = Routes.aLangRoutes[lang];
       
-      routes[lang] = {};
+      routes.all[lang] = {};
+      routes.pages[lang] = {};
 
       for ( var i in aLangRoutes) {
 
@@ -31,9 +34,18 @@ var json = (function() {
 
         if (!route.frontRouting) continue;
 
-        routes[lang][route.id] = {};
-        routes[lang][route.id].id = route.id;
-        routes[lang][route.id].route = route.route;
+        routes.all[lang][route.id] = {};
+        routes.all[lang][route.id].id = route.id;
+        routes.all[lang][route.id].route = route.route;
+
+        // remove lang from route
+        var backboneRoute = route.route.replace('/' + lang + '/', '');
+
+        //remove last slash
+        if (backboneRoute[backboneRoute.length - 1] == '/') backboneRoute = backboneRoute.substr(0, backboneRoute.length - 1);
+        if (backboneRoute == '/' + lang || backboneRoute == '') continue;
+
+        routes.pages[lang][backboneRoute] = route.id;
       }
 
     }

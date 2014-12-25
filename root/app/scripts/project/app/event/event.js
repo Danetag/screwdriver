@@ -12,21 +12,7 @@ var Event = {
   'EXPLORE':'explore',
   
   // Menu
-  'TOGGLE_MENU': 'toggle_menu',
-
-  //Title
-  'TOGGLE_TITLE' : 'toggle_title',
-
-  // PIXI
-  'CHANGE_TITLE': 'change_title',
-  'GO_TO_CONTENT': 'go_to_content',
-  'DISPLAY_INTERACTION' : 'display_interaction',
-
-  // INTERACTION 
-  'CLICK_POINT' : 'click_point',
-  'LINE_CONNECTED' : 'line_connected',
-  'INTERACTION_DONE' : 'interaction_done',
-  'INTERACTION_STARTED': 'interaction_started'
+  'TOGGLE_MENU': 'toggle_menu'
 }
 
 module.exports = Event;

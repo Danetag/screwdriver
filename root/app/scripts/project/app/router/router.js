@@ -11,10 +11,17 @@ var Router = Backbone.Router.extend(new function (){
    * @type {Object}
    */
   this.routes = {
-      ":page/:params":"default",
-      ":page":"default",
-      "":"default"
+    ":lang": "default",
+    ":lang/": "default",
+    ":lang/:page": "default",
+    ":lang/:page/": "default"
   };
+
+  /*
+   * Routes defined on server side
+   * @type {Object}
+   */
+  this.routesServer = null;
 
   /*
    * Instance of mainPage
@@ -26,18 +33,29 @@ var Router = Backbone.Router.extend(new function (){
     this.mainPage = new MainPage();
   }
 
-  this.init = function() {
+  this.init = function(routes) {
+    this.routesServer = routes;
     this.mainPage.init();
   }
 
-  this.default = function (page, params) {
+  this.default = function (lang, section) {
 
-    console.log('routing', page, this);
-    
-    page = (page == null) ? 'homepage' : page.toLowerCase();
+    var page = 'index';
 
-    this.mainPage.navigateTo(page, params);
-    //this.history.push(page);
+    if (section != null) {
+
+      for (var stn in this.routesServer.pages[lang]) {
+        
+        if (stn == section) {
+          page = this.routesServer.pages[lang][stn];
+          break;
+        }
+      }
+    } 
+
+    console.log('> routing', lang, page);
+
+    this.mainPage.navigateTo(page);
 
   };
 

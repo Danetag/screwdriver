@@ -40,6 +40,12 @@ var conf = (function() {
     this.pages = {};
 
     /**
+     * Object with all the routes
+     * @type {Object}
+     */
+    this.routes = {};
+
+    /**
      * Is an High resolution screen ?
      * @type {boolean}
      */

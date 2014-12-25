@@ -4,17 +4,8 @@ var $                   = require('jquery'),
     Backbone            = require('backbone'),
     _                   = require('underscore'),
     EVENT               = require('event/event'),
-    HomePage            = require('page/pages/home/homepage'),
-    StartPage           = require('page/pages/start/startpage'),
-    CommunicationPage   = require('page/pages/communication/communicationpage'),
-    NavigationPage      = require('page/pages/navigation/navigationpage'),
-    HydrationPage       = require('page/pages/hydration/hydrationpage'),
-    FoodPage            = require('page/pages/food/foodpage'),
-    ToolsPage           = require('page/pages/tools/toolspage'),
-    MedicalPage         = require('page/pages/medical/medicalpage'),
-    ShelterPage         = require('page/pages/shelter/shelterpage'),
-    IlluminationPage    = require('page/pages/illumination/illuminationpage'),
-    PetPage             = require('page/pages/pet/petpage');
+    IndexPage           = require('page/pages/index/index'),
+    AboutPage           = require('page/pages/about/about');
 
 var PageManager = function (){
 
@@ -52,14 +43,14 @@ PageManager.prototype.init = function() {
 
 }
 
-PageManager.prototype.navigateTo = function(pageID, params) {
+PageManager.prototype.navigateTo = function(pageID) {
 
   console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
   
   // If same page, resend params.
   if (this.currentPage !== null && this.currentPage.id === pageID) {
-    console.log('same page, resend params.')
-    this.currentPage.setParams(params);
+    console.log('same page, resend params if params.')
+    //this.currentPage.setParams(params);
     return false;
   }
 
@@ -86,8 +77,6 @@ PageManager.prototype.setCurrentPage = function(pageID, params) {
   this.oldPage = this.currentPage;
   this.currentPage = this.pages[pageID];
   this.currentPage.init(params);
-
-  this.listenTo(this.currentPage.view, EVENT.EXPLORE, _explore.bind(this));
 }
 
 PageManager.prototype.setOldPage = function(pageID) {
@@ -101,17 +90,8 @@ PageManager.prototype.setOldPage = function(pageID) {
 var _initPages = function() {
 
   this.pages = {
-    'homepage': new HomePage(),
-    'start': new StartPage(),
-    'communication': new CommunicationPage(),
-    'pet': new PetPage(),
-    'navigation': new NavigationPage(),
-    'hydration': new HydrationPage(),
-    'food': new FoodPage(),
-    'tools': new ToolsPage(),
-    'medical': new MedicalPage(),
-    'shelter': new ShelterPage(),
-    'illumination': new IlluminationPage()
+    'index': new IndexPage(),
+    'about': new AboutPage()
   }
 
 }

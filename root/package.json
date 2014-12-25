@@ -23,6 +23,7 @@
     "express": "4.x"
   },
   "devDependencies": {
+    "autoprefixer-stylus": "x",
     "backbone": "x",
     "browserify": "x",
     "dot": "x",
@@ -47,6 +48,7 @@
     "jquery": "x",
     "nib": "x",
     "stringify": "x",
+    "underscore": "x",
     "vinyl-source-stream": "x"
   }
 }

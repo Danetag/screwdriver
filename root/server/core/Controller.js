@@ -23,6 +23,7 @@ var controller = (function() {
       this.setBaseUrl(req);
       this.setBasicDatas(req);
       this.setPageDatas(req);
+      this.setMenu(req);
 
     },
 
@@ -48,7 +49,10 @@ var controller = (function() {
         }
         
       } 
-        
+      
+      // Maybe wrong here :/
+      this.config.root =  '';
+
       this.config.base_url = baseUrl;
     },
 
@@ -65,6 +69,9 @@ var controller = (function() {
 
       // Lang
       this.datas.lang = this.lang;
+
+      // Is dev ?
+      this.datas.use_src = this.config.use_src;
       
       // get device
       this.datas.device = req.device.type;
@@ -86,6 +93,10 @@ var controller = (function() {
       if (this.page.hasLayout == undefined || this.page.hasLayout)
         this.datas.layout = new View(this.config.tplLayoutPath, 'layout.html', this.datas);
 
+    },
+
+    setMenu: function(req) {
+      if (this.page == null) return;
     }
 
   }

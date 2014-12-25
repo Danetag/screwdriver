@@ -1,0 +1,41 @@
+.loader {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  opacity: 0; /* JS */
+  overflow: hidden;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.loader-main {
+
+  background-color: #000;
+  opacity: 0; 
+
+  .label,
+  .pct {
+    color: #FFF;
+    display: block;
+    text-align: center;
+  }
+
+}
+
+.loader-basic {
+  
+  opacity: 1;
+  position: absolute;
+
+  .bar {
+    translate3d(-100%, 0, 0);
+    background-color: red;
+    bottom:0;
+    height: 3px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+  }
+
+}
