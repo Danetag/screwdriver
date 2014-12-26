@@ -9,6 +9,7 @@ var $               = require('jquery'),
     AbstractPage    = require('abstract/page'),
     _               = require('underscore'),
     tools           = require('tools/tools'),
+    DatasManager    = require('datas/datasManager'),
     PageManager     = require('page/pageManager');
 
 var MainPage = function (){

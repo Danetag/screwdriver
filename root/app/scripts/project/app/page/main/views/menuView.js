@@ -28,7 +28,7 @@ var MenuView = AbstractPageView.extend(new function (){
 
     e.preventDefault();
 
-    var href = $(e.currentTarget).attr('href').replace(Config.getInstance().baseUrl, '');
+    var href = $(e.currentTarget).attr('href').replace(Config.baseUrl, '');
     Backbone.history.navigate(href, { trigger: true })
   }
 

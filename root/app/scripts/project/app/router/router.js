@@ -1,6 +1,7 @@
 'use strict';
 
 var Backbone   = require('backbone'),
+    Config     = require('config/config'),
     MainPage   = require('page/mainPage');
     
 
@@ -44,14 +45,16 @@ var Router = Backbone.Router.extend(new function (){
 
     if (section != null) {
 
-      for (var stn in this.routesServer.pages[lang]) {
+      for (var stn in this.routesServer[lang]) {
         
         if (stn == section) {
-          page = this.routesServer.pages[lang][stn];
+          page = this.routesServer[lang][stn];
           break;
         }
       }
     } 
+
+    Config.lang = lang;
 
     console.log('> routing', lang, page);
 

@@ -55,7 +55,7 @@ var AbstractLoaderView = AbstractView.extend(new function (){
 
     this.fixImgSrc = function() {
 
-        var c = Config.getInstance();
+        var c = Config;
         var $imgs = this.$el.find('img');
 
         if (!$imgs.length) return;

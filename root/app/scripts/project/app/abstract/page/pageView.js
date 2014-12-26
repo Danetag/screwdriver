@@ -4,6 +4,7 @@ var $             = require('jquery'),
     EVENT         = require('event/event'),
     AbstractView  = require('abstract/view'),
     Config        = require('config/config'),
+    DatasManager  = require('datas/datasManager'),
     Backbone      = require('backbone');
 
 var PageView = AbstractView.extend(new function (){
@@ -37,18 +38,15 @@ var PageView = AbstractView.extend(new function (){
 
     options = (options != undefined) ? options : {};
 
-    this.config = Config.getInstance();
-
     // is a view container ? A view container doesn't have any DOM related element.
     options.isViewContainer = (options.isViewContainer != undefined) ? options.isViewContainer : false;
 
     AbstractView.prototype.initialize.call(this, options);
   }
 
-  this.init = function(params, datas) {
+  this.init = function(params) {
 
     this.params = params || {};
-    this.datas = datas || {};
 
     this.initSubViews();
     this.initDOM();
@@ -65,7 +63,7 @@ var PageView = AbstractView.extend(new function (){
   }
 
   this.initConfig = function() {
-    this.configView = Config.getInstance().pages[this.idView];
+    this.configView = Config.pages[this.idView];
   }
 
   this.render = function() {
@@ -107,7 +105,7 @@ var PageView = AbstractView.extend(new function (){
 
   this.fixImgSrc = function() {
 
-    var c = Config.getInstance();
+    var c = Config;
     var $imgs = this.$el.find('img');
 
     if (!$imgs.length) return;
@@ -138,7 +136,7 @@ var PageView = AbstractView.extend(new function (){
 
   this.fixLinkSrc = function() {
 
-    var c = Config.getInstance();
+    var c = Config;
     var $imgs = this.$el.find('a');
 
     if (!$imgs.length) return;
@@ -171,7 +169,9 @@ var PageView = AbstractView.extend(new function (){
 
     if (this.template == null) return;
 
-    this.el = this.template(this.data);
+    this.datas = DatasManager.get(this.id);
+
+    this.el = this.template(this.datas);
     this.$el = $(this.el);
 
   }

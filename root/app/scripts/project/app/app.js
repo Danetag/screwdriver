@@ -5,6 +5,7 @@ var $               = require('jquery'),
     Config          = require('config/config'),
     Loader          = require('loader/loader'),
     EVENT           = require('event/event'),
+    DatasManager    = require('datas/datasManager'),
     LoaderViewEmpty = require('loader/views/empty'),
     Router          = require('router/router');
 
@@ -24,18 +25,12 @@ var App = Backbone.View.extend(new function (){
    */
   this.loader = null;
 
-  /**
-   * Instance of config/config
-   * @type {Config}
-   */
-  this.config = null;
 
   this.init = function(){
     
     console.log('**** Begin App ****');
 
-    this.config = Config.getInstance();
-    this.config.init();
+    Config.init();
 
     _loadJsonConfig.call(this);
 
@@ -56,18 +51,20 @@ var App = Backbone.View.extend(new function (){
 
   var _loaderComplete = function(e) {
 
-    this.config.pages = this.loader.getItem('config').result;
-    this.config.routes = this.loader.getItem('routes').result;
+    Config.pages = this.loader.getItem('config').result;
+    var routes = this.loader.getItem('routes').result;
 
     this.loader.dispose();
     this.loader = null;
 
     this.router = new Router();
-    this.router.init(this.config.routes);
+    this.router.init(routes.pages);
+
+    DatasManager.init(routes.all);
 
     Backbone.history.start({
       pushState: true,
-      root: this.config.root
+      root: Config.root
     });
   }
 

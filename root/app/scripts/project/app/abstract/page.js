@@ -2,7 +2,6 @@
 
 var $         = require('jquery'),
     EVENT     = require('event/event'),
-    Config    = require('config/config'),
     _         = require('underscore'),
     Loader    = require('loader/loader'),
     Backbone  = require('backbone');

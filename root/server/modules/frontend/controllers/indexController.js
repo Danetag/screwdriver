@@ -1,4 +1,4 @@
-var controller = require('../../../core/Controller');
+var controller = require('../core/Controller');
 
 var index = (function() {
 

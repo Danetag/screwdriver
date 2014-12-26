@@ -43,14 +43,14 @@ PageManager.prototype.init = function() {
 
 }
 
-PageManager.prototype.navigateTo = function(pageID) {
+PageManager.prototype.navigateTo = function(pageID, params) {
 
   console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
   
   // If same page, resend params.
   if (this.currentPage !== null && this.currentPage.id === pageID) {
     console.log('same page, resend params if params.')
-    //this.currentPage.setParams(params);
+    this.currentPage.setParams(params);
     return false;
   }
 
@@ -74,6 +74,12 @@ PageManager.prototype.navigateTo = function(pageID) {
 }
 
 PageManager.prototype.setCurrentPage = function(pageID, params) {
+
+  if (this.pages[pageID] == undefined) {
+    console.log('PageManager:: Error: Please create a controller/view for the ' + pageID + 'section, then register the page in the PageManager');
+    return;
+  }
+
   this.oldPage = this.currentPage;
   this.currentPage = this.pages[pageID];
   this.currentPage.init(params);
@@ -134,7 +140,6 @@ var _loadCurrentPage = function() {
  * @private
  */
 var _currentPageLoaderShown = function() {
-  console.log('_currentPageLoaderShown', this.oldPage);
   this.oldPage.dispose();
 }
 
@@ -185,9 +190,7 @@ var _currentPageViewShown = function() {
 }
 
 var _explore = function(){
-
   this.trigger(EVENT.EXPLORE, {});
-
 }
 
 

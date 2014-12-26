@@ -17,11 +17,7 @@ var mod = (function() {
     this.app = null;
     this.aControllers = {};
 
-    config.translationPath = __dirname + '/datas/translations/';
-    config.baseLanguage    = "en";
-    config.tplPath = global.APP.basePath + '/tpl';
-    config.tplLayoutPath = config.tplPath + '/layout';
-    config.tplPartialPath = config.tplPath + '/partial';
+    _initConfig.call(this);
 
   }
 
@@ -38,6 +34,16 @@ var mod = (function() {
       initRoutes_.call(this);
       
     }
+
+  }
+
+  var _initConfig = function() {
+
+    config.translationPath = __dirname + '/datas/translations/';
+    config.baseLanguage    = "en";
+    config.tplPath = global.APP.basePath + '/tpl';
+    config.tplLayoutPath = config.tplPath + '/layout';
+    config.tplPartialPath = config.tplPath + '/partial';
 
   }
 

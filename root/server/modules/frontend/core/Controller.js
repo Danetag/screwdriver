@@ -1,4 +1,5 @@
-var View    = require('dot-view').View;
+var View    = require('dot-view').View,
+    Routes  = require('../routes');
 
 var controller = (function() {
 
@@ -76,6 +77,9 @@ var controller = (function() {
       // get device
       this.datas.device = req.device.type;
       this.datas.is_mobile = (this.datas.device == 'phone') ? true : false;
+
+      // Menu
+      this.datas.routes = Routes.aLangRoutes;
       
     },
 

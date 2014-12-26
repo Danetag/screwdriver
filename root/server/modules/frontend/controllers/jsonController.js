@@ -1,4 +1,4 @@
-var controller  = require('../../../core/Controller'),
+var controller  = require('../core/Controller'),
     Routes      = require('../routes');
 
 var json = (function() {
@@ -12,6 +12,7 @@ var json = (function() {
 
   JsonController.prototype.preAction = function(req, res) {
     this.setBaseUrl(req);
+    this.setBasicDatas(req);
     res.setHeader('Content-Type', 'application/json');
   }
 
@@ -37,6 +38,12 @@ var json = (function() {
         routes.all[lang][route.id] = {};
         routes.all[lang][route.id].id = route.id;
         routes.all[lang][route.id].route = route.route;
+        routes.all[lang][route.id].label = route.label;
+        routes.all[lang][route.id].datas = route.datas;
+
+        // Complete the datas
+        routes.all[lang][route.id].datas.lang = lang;
+        routes.all[lang][route.id].datas.base_url = this.config.base_url;
 
         // remove lang from route
         var backboneRoute = route.route.replace('/' + lang + '/', '');

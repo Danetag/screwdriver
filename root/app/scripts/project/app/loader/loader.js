@@ -55,12 +55,10 @@ var loader = Backbone.View.extend(new function (){
 
   this.addItem = function(item) {
 
-    var config = Config.getInstance()
-
-    var baseUrl = config.baseUrl;
+    var baseUrl = Config.baseUrl;
 
     // Has a retina version provided and it's a retina screen ?
-    if (config.isHighRes && item.src2x != undefined) {
+    if (Config.isHighRes && item.src2x != undefined) {
       item.src = item.src2x;
     }
 

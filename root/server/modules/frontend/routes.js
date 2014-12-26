@@ -1,5 +1,5 @@
 var express = require('express');
-var routing = require('../../core/Routing');
+var routing = require('./core/Routing');
 
 var frontRouter = (function() {
 

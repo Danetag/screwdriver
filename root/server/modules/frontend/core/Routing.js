@@ -1,4 +1,5 @@
-var express = require('express');
+var express = require('express'),
+    fs      = require('fs');
 
 var routing = (function() {
 
@@ -111,6 +112,8 @@ var routing = (function() {
       var rt = {
         route: url,
         id: route.controller.id,
+        label: _getLabel.call(this, lang, route.controller.id),
+        datas: _getDatas.call(this, lang, route.controller.id),
         frontRouting: (route.frontRouting != undefined) ? route.frontRouting : true
       };
       
@@ -134,6 +137,28 @@ var routing = (function() {
   var _getTranslation = function(lang, word) {
     var words = require(this.config.translationPath + lang + "/" + this.translationRouteFile);
     return (words[word] !== undefined) ? words[word] : word;
+  }
+
+  var _getDatas = function(lang, id) {
+
+    var path = this.config.translationPath + lang + "/" + id + '.json';
+
+    if (!fs.existsSync(path)) {
+      return null;
+    }
+
+    return require(path);
+  }
+
+  var _getLabel = function(lang, id) {
+
+    var translateObj = _getDatas.call(this, lang, id);
+
+    if (translateObj === null) {
+      return id;
+    }
+
+    return (translateObj.label !== undefined) ? translateObj.label : id;
   }
 
   return Routing;
