@@ -3,12 +3,15 @@
 
 > <%= description %>
 
-## Featuring
-- Stylus + Source Mapping
+## Features
+- Stylus + Autoprofixer + Nib + Source Mapping
 - Livereload
 - Server NodeJS (Express)
-- Dot.js (templating) both server and client side.
-- Browserify + Source Mapping
+- Dot.js (templating) for both server and client side.
+- Browserify + Backbone + Source Mapping
+- SEO Friendly
+- JS none-obstrusive
+- Pre-rendered pages
 
 ## Quickstart
 To setup this project on your local machine:
@@ -18,7 +21,7 @@ To setup this project on your local machine:
 $ npm install -g gulp
 ```
 
-- NPM dependencies (should have been run before wth Slush)
+- NPM dependencies (should have been run before with Slush)
 ```
 npm install
 ```
@@ -54,7 +57,7 @@ We use dot.js in order to share templates between both server and client side.
 We use a /datas folder which handles the configuration of each environnement + a description of each page for:
 - setting up the controllers
 - setting up the translations
-- generate a JSON file for the front-end side routing.
+- generate a JSON file for the front-end side routing + datas.
 
 Each environement has its own configuration in /server/modules/frontend/datas/env.json
 
