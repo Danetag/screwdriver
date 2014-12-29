@@ -7,6 +7,8 @@ var $                   = require('jquery'),
     IndexPage           = require('page/pages/index/index'),
     AboutPage           = require('page/pages/about/about');
 
+
+
 var PageManager = function (){
 
   _.extend(this, Backbone.Events);
@@ -29,29 +31,26 @@ var PageManager = function (){
    */
   this.pages        = {};
 
-  /*
-   * Current viewport
-   * @type {Object}
-   */
-  this.viewport     = {};
-
 }
 
+
+/*
+ * Handles the initialization
+ */
 PageManager.prototype.init = function() {
-
   _initPages.call(this);
-
 }
+
 
 PageManager.prototype.navigateTo = function(pageID, params) {
 
-  console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
+  //console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
   
   // If same page, resend params.
   if (this.currentPage !== null && this.currentPage.id === pageID) {
     console.log('same page, resend params if params.')
     this.currentPage.setParams(params);
-    return false;
+    return;
   }
 
   // If the previous page still lives, so it could be a backslash during a loading. 
@@ -63,7 +62,7 @@ PageManager.prototype.navigateTo = function(pageID, params) {
       Backbone.history.history.back();
     }
 
-    return false;
+    return;
   }
 
   this.setCurrentPage(pageID, params);
@@ -72,6 +71,7 @@ PageManager.prototype.navigateTo = function(pageID, params) {
   _hideOldPage.call(this);
   
 }
+
 
 PageManager.prototype.setCurrentPage = function(pageID, params) {
 
@@ -157,8 +157,6 @@ var _currentPageLoaderComplete = function() {
  * @private
  */
 var _currentPageViewInit = function() {
-
-  this.currentPage.view.resize(this.viewport);
 
   if (!this.currentPage.isLoaded) {
     this.listenToOnce(this.currentPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));

@@ -1,20 +1,20 @@
 'use strict';
 
-var $               = require('jquery'),
-    _               = require('underscore'),
-    AbstractPage    = require('abstract/page'),
-    AboutView       = require('page/pages/about/views/aboutView'),
-    Backbone        = require('backbone');
+var $               		= require('jquery'),
+    _               		= require('underscore'),
+    AbstractController    	= require('abstract/controller/controller'),
+    AboutView       		= require('page/pages/about/views/aboutView'),
+    Backbone        		= require('backbone');
 
 var AboutPage = function (){
 
-  AbstractPage.call(this);
+  AbstractController.call(this);
   this.id = 'about';
 
 }
 
-_.extend(AboutPage, AbstractPage);
-_.extend(AboutPage.prototype, AbstractPage.prototype);
+_.extend(AboutPage, AbstractController);
+_.extend(AboutPage.prototype, AbstractController.prototype);
 
 /*
  * @overrided

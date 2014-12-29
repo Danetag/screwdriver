@@ -7,67 +7,93 @@ var $               = require('jquery'),
     EVENT           = require('event/event'),
     DatasManager    = require('datas/datasManager'),
     LoaderViewEmpty = require('loader/views/empty'),
+    _               = require('underscore'),
     Router          = require('router/router');
 
 Backbone.$ = $;
 
-var App = Backbone.View.extend(new function (){
+
+
+/**
+ * app: Init the app
+ * @constructor
+ */
+var App = function (){
+
+  _.extend(this, Backbone.Events);
 
   /**
-   * Instance of router/router
-   * @type {Router}
+   * Instance of Bakcbone Router
+   * @type {router/router}
    */
   this.router = null;
 
   /**
-   * Instance of loader/loader
-   * @type {Loader}
+   * Instance of Loader
+   * @type {loader/loader}
    */
   this.loader = null;
 
+};
 
-  this.init = function(){
-    
-    console.log('**** Begin App ****');
 
-    Config.init();
 
-    _loadJsonConfig.call(this);
+/**
+ * Handles the init
+ */
+App.prototype.init = function(){
+  
+  console.log('**** Begin App ****');
 
-  }
+  Config.init();
 
-  var _loadJsonConfig = function() {
+  _loadJsonConfig.call(this);
 
-    this.loader = new Loader();
-    this.loader.init(new LoaderViewEmpty());
+}
 
-    this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this));
 
-    this.loader.addItem({ src: "/datas/config.json" , id:"config" })
-    this.loader.addItem({ src: "/routes.json" , id:"routes" })
+/**
+ * Load the configuration JSON files
+ * @private
+ */
+var _loadJsonConfig = function() {
 
-    this.loader.start();
-  }
+  this.loader = new Loader();
+  this.loader.init(new LoaderViewEmpty());
 
-  var _loaderComplete = function(e) {
+  this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this));
 
-    Config.pages = this.loader.getItem('config').result;
-    var routes = this.loader.getItem('routes').result;
+  this.loader.addItem({ src: "/datas/config.json" , id:"config" })
+  this.loader.addItem({ src: "/routes.json" , id:"routes" })
 
-    this.loader.dispose();
-    this.loader = null;
+  this.loader.start();
+}
 
-    this.router = new Router();
-    this.router.init(routes.pages);
 
-    DatasManager.init(routes.all);
+/**
+ * On loading completed
+ * @param {Event} e Loader event.
+ * @private
+ */
+var _loaderComplete = function(e) {
 
-    Backbone.history.start({
-      pushState: true,
-      root: Config.root
-    });
-  }
+  Config.pages = this.loader.getItem('config').result;
+  var routes = this.loader.getItem('routes').result;
 
-});
+  this.loader.dispose();
+  this.loader = null;
+
+  this.router = new Router();
+  this.router.init(routes.pages);
+
+  DatasManager.init(routes.all);
+
+  Backbone.history.start({
+    pushState: true,
+    root: Config.root
+  });
+}
+
+
 
 module.exports = App;

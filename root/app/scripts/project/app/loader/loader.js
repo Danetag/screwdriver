@@ -4,9 +4,12 @@ var Backbone        = require('backbone'),
     $               = require('jquery'),
     EVENT           = require('event/event'),
     Config          = require('config/config'),
+    _               = require('underscore'),
     LoaderViewBasic = require('loader/views/basic');
 
-var loader = Backbone.View.extend(new function (){
+var Loader = function (){
+
+  _.extend(this, Backbone.Events);
 
   /*
    * Array of objects containign src to load and type
@@ -26,148 +29,150 @@ var loader = Backbone.View.extend(new function (){
    */
   this.loaderView  = null;
 
-  this.init = function(loaderView) {
+}
 
-    this.loaderView = (loaderView != undefined) ? loaderView : new LoaderViewBasic();
-    this.loaderView.init();
+Loader.prototype.init = function(loaderView) {
 
-    this.items = []; 
-    this.queue  = new createjs.LoadQueue(true);
+  this.loaderView = (loaderView != undefined) ? loaderView : new LoaderViewBasic();
+  this.loaderView.init();
 
-    this.bindEvents();
+  this.items = []; 
+  this.queue  = new createjs.LoadQueue(true);
 
+  this.bindEvents();
+
+}
+
+Loader.prototype.bindEvents = function () {
+
+  this.queue.addEventListener('fileload',  $.proxy(_onFileLoad, this));
+  this.queue.addEventListener('filestart', $.proxy(_onFileStart, this));
+  this.queue.addEventListener('loadstart', $.proxy(_onLoadStart, this));
+  this.queue.addEventListener('complete',  $.proxy(_onComplete, this));
+  this.queue.addEventListener('progress',  $.proxy(_onProgress, this));
+  this.queue.addEventListener('error',     $.proxy(_onError, this));
+
+}
+
+Loader.prototype.unbindEvents = function () {
+  this.queue.removeAllEventListeners();
+}
+
+Loader.prototype.addItem = function(item) {
+
+  var baseUrl = Config.baseUrl;
+
+  // Has a retina version provided and it's a retina screen ?
+  if (Config.isHighRes && item.src2x != undefined) {
+    item.src = item.src2x;
   }
 
-  this.bindEvents = function () {
-
-    this.queue.addEventListener('fileload',  $.proxy(_onFileLoad, this));
-    this.queue.addEventListener('filestart', $.proxy(_onFileStart, this));
-    this.queue.addEventListener('loadstart', $.proxy(_onLoadStart, this));
-    this.queue.addEventListener('complete',  $.proxy(_onComplete, this));
-    this.queue.addEventListener('progress',  $.proxy(_onProgress, this));
-    this.queue.addEventListener('error',     $.proxy(_onError, this));
-
-  }
-  
-  this.unbindEvents = function () {
-    this.queue.removeAllEventListeners();
+  // Add base URL if nothing is specified
+  if (item.src.indexOf("http://") < 0 && item.src.indexOf("https://") < 0) {
+    item.src = baseUrl + item.src;
   }
 
-  this.addItem = function(item) {
+  this.items.push(item);
+}
 
-    var baseUrl = Config.baseUrl;
+Loader.prototype.addItems = function(items) {
 
-    // Has a retina version provided and it's a retina screen ?
-    if (Config.isHighRes && item.src2x != undefined) {
-      item.src = item.src2x;
+  for (var i in items) {
+    this.addItem(items[i]);
+  }
+}
+
+Loader.prototype.getItem = function(key) {
+
+  //Find asset
+  for (var i in this.items) {
+
+    var item = this.items[i];
+
+    if (item.id != null && item.id == key) {
+      return item;
     }
-
-    // Add base URL if nothing is specified
-    if (item.src.indexOf("http://") < 0 && item.src.indexOf("https://") < 0) {
-      item.src = baseUrl + item.src;
-    }
-
-    this.items.push(item);
   }
 
-  this.addItems = function(items) {
+}
 
-    for (var i in items) {
-      this.addItem(items[i]);
-    }
-  }
+Loader.prototype.start = function() { 
+  this.listenToOnce(this.loaderView, EVENT.SHOWN, _loaderShown.bind(this));
+  this.listenToOnce(this.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
+  this.loaderView.show();
+}
 
-  this.getItem = function(key) {
+Loader.prototype.dispose = function() {
+  this.unbindEvents();
+  this.queue = null;
 
-    //Find asset
-    for (var i in this.items) {
+  this.items.length = 0;
+  this.items = [];
 
-      var item = this.items[i];
+  this.loaderView.dispose();
+  this.loaderView = null;
+}
 
-      if (item.id != null && item.id == key) {
-        return item;
-      }
-    }
+/* LOADING EVENT */
 
-  }
+var _onFileStart = function(e) {
+  //console.log('_onFileStart');
+}
 
-  this.start = function() { 
-    this.listenToOnce(this.loaderView, EVENT.SHOWN, _loaderShown.bind(this));
-    this.listenToOnce(this.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
-    this.loaderView.show();
-  }
+var _onLoadStart = function(e) {
+  //console.log('_onLoadStart');
+}
 
-  this.dispose = function() {
-    this.unbindEvents();
-    this.queue = null;
+var _onFileLoad = function(e) {
 
-    this.items.length = 0;
-    this.items = [];
+  //Find asset
+  for (var i in this.items) {
 
-    this.loaderView.dispose();
-    this.loaderView = null;
-  }
+    var item = this.items[i];
 
-  /* LOADING EVENT */
-
-  var _onFileStart = function(e) {
-    //console.log('_onFileStart');
-  }
-
-  var _onLoadStart = function(e) {
-    //console.log('_onLoadStart');
-  }
-
-  var _onFileLoad = function(e) {
-
-    //Find asset
-    for (var i in this.items) {
-
-      var item = this.items[i];
-
-      if (item.id != null && item.id == e.item.id) {
-        item.result = e.result;
-        item.raw = e.rawResult;
-        return;
-      }
-
-    }
-
-  }
-
-  var _onError = function(e) {
-    //console.log('error loading');
-  }
-
-  var _onProgress = function(e) {
-    //e.progress
-    this.loaderView.setPct(Math.round(e.progress * 100));
-  }
-
-  var _onComplete = function(){
-    this.trigger(EVENT.COMPLETE, {loader:this});
-  }
-
-  /* VIEW EVENT */
-
-  var _loaderShown = function(e) {
-
-    this.trigger(EVENT.SHOWN);
-
-    if (!this.items.length) {
-      this.loaderView.setPct(100);
-      _onComplete.call(this);
+    if (item.id != null && item.id == e.item.id) {
+      item.result = e.result;
+      item.raw = e.rawResult;
       return;
-    } 
+    }
 
-    this.queue.loadTimeout = 999999; // Time in milliseconds to assume a load has failed.
-    this.queue.loadManifest(this.items);
   }
 
-  var _loaderHidden = function() {
-    this.trigger(EVENT.HIDDEN);
-  }
+}
 
-});
+var _onError = function(e) {
+  //console.log('error loading');
+}
 
-module.exports = loader;
+var _onProgress = function(e) {
+  //e.progress
+  this.loaderView.setPct(Math.round(e.progress * 100));
+}
+
+var _onComplete = function(){
+  this.trigger(EVENT.COMPLETE, {loader:this});
+}
+
+/* VIEW EVENT */
+
+var _loaderShown = function(e) {
+
+  this.trigger(EVENT.SHOWN);
+
+  if (!this.items.length) {
+    this.loaderView.setPct(100);
+    _onComplete.call(this);
+    return;
+  } 
+
+  this.queue.loadTimeout = 999999; // Time in milliseconds to assume a load has failed.
+  this.queue.loadManifest(this.items);
+}
+
+var _loaderHidden = function() {
+  this.trigger(EVENT.HIDDEN);
+}
+
+
+
+module.exports = Loader;
