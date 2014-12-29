@@ -23,12 +23,6 @@ var App = function (){
   _.extend(this, Backbone.Events);
 
   /**
-   * Instance of Bakcbone Router
-   * @type {router/router}
-   */
-  this.router = null;
-
-  /**
    * Instance of Loader
    * @type {loader/loader}
    */
@@ -83,9 +77,7 @@ var _loaderComplete = function(e) {
   this.loader.dispose();
   this.loader = null;
 
-  this.router = new Router();
-  this.router.init(routes.pages);
-
+  Router.init(routes.pages);
   DatasManager.init(routes.all);
 
   Backbone.history.start({

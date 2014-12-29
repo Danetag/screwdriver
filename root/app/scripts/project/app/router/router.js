@@ -5,6 +5,11 @@ var Backbone   = require('backbone'),
     MainPage   = require('page/mainPage');
     
 
+/**
+ * Router: Routing logic
+ * @extends {Backbone.Router}
+ * @constructor
+ */
 var Router = Backbone.Router.extend(new function (){
 
   /**
@@ -33,15 +38,27 @@ var Router = Backbone.Router.extend(new function (){
 });
 
 
+
+/*
+ * @override
+ */
 Router.prototype.initialize = function(){
   this.mainPage = new MainPage();
 }
 
+
+/*
+ * Handles the init
+ */
 Router.prototype.init = function(routes) {
   this.routesServer = routes;
   this.mainPage.init();
 }
 
+
+/*
+ * Callback for each route after push state.
+ */
 Router.prototype.default = function (lang, section) {
 
   var page = 'index';
@@ -65,5 +82,4 @@ Router.prototype.default = function (lang, section) {
 
 
 
-
-module.exports = Router;
+module.exports = new Router();

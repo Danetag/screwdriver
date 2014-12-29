@@ -6,6 +6,8 @@ var $               		= require('jquery'),
     AboutView       		= require('page/pages/about/views/aboutView'),
     Backbone        		= require('backbone');
 
+
+
 var AboutPage = function (){
 
   AbstractController.call(this);

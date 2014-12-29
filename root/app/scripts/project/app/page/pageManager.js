@@ -9,19 +9,24 @@ var $                   = require('jquery'),
 
 
 
+/**
+ * PageManager: manage the page transitions
+ * @extend {Backbone.Events}
+ * @constructor
+ */
 var PageManager = function (){
 
   _.extend(this, Backbone.Events);
 
   /*
    * Instance of Page
-   * @type {Page}
+   * @type {abstract/controller}
    */
   this.currentPage  = null;
 
   /*
    * Instance of Page
-   * @type {Page}
+   * @type {abstract/controller}
    */
   this.oldPage      = null;
 
@@ -42,6 +47,11 @@ PageManager.prototype.init = function() {
 }
 
 
+/*
+ * Entry point to change pages
+ * @param {string} pageID of the page to navigate to.
+ * @param {Object} params of the page to navigate to.
+ */
 PageManager.prototype.navigateTo = function(pageID, params) {
 
   //console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
@@ -73,6 +83,11 @@ PageManager.prototype.navigateTo = function(pageID, params) {
 }
 
 
+/*
+ * Set the current page
+ * @param {string} pageID of the page to navigate to.
+ * @param {Object} params of the page to navigate to.
+ */
 PageManager.prototype.setCurrentPage = function(pageID, params) {
 
   if (this.pages[pageID] == undefined) {
@@ -85,12 +100,18 @@ PageManager.prototype.setCurrentPage = function(pageID, params) {
   this.currentPage.init(params);
 }
 
+
+/**
+ * Hide the page currently displayed
+ * @private
+ */
 PageManager.prototype.setOldPage = function(pageID) {
   this.oldPage = this.pages[pageID];
 }
 
+
 /**
- * Defines all the pages here
+ * Instance all the pages here
  * @private
  */
 var _initPages = function() {
@@ -102,7 +123,7 @@ var _initPages = function() {
 
 }
 
-/** Transition logic */
+/** Transition logic **/
 
 /**
  * Hide the page currently displayed
@@ -113,12 +134,19 @@ var _hideOldPage = function() {
   this.oldPage.view.hide();
 }
 
+
+/**
+ * Callback once the current page is hidden
+ * @private
+ */
 var _oldPageHidden = function() {
   _loadCurrentPage.call(this);
 }
 
+
 /**
  * Load the next page
+ * If already loaded, no loader is displayed, we directly go to the next step
  * @private
  */
 var _loadCurrentPage = function() {
@@ -185,10 +213,6 @@ var _currentPageLoaderHidden = function() {
  */
 var _currentPageViewShown = function() {
   this.oldPage = null;
-}
-
-var _explore = function(){
-  this.trigger(EVENT.EXPLORE, {});
 }
 
 

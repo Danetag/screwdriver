@@ -8,6 +8,8 @@ var $                     = require('jquery'),
     IndexView             = require('page/pages/index/views/indexView'),
     Backbone              = require('backbone');
 
+
+
 var IndexPage = function (){
 
   AbstractController.call(this);
@@ -19,19 +21,13 @@ var IndexPage = function (){
 _.extend(IndexPage, AbstractController);
 _.extend(IndexPage.prototype, AbstractController.prototype);
 
+
+
 /*
  * @overrided
  */
 IndexPage.prototype.instanceView = function() {
   this.view = new IndexView();
-}
-
-/*
- * @override
- */
-IndexPage.prototype.initLoader = function() {
-  this.loader = new Loader();
-  this.loader.init(new LoaderViewEmpty());
 }
 
 

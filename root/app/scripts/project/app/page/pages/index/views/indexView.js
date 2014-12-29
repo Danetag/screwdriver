@@ -7,16 +7,12 @@ var $                     = require('jquery'),
     _                     = require('underscore'),
     Backbone              = require('backbone');
 
+
+
 var IndexView = AbstractPageView.extend(new function (){
 
   this.idView = 'index';
   this.id = 'index';
-
-  /*
-  this.events =  {
-    "click .btn": "onBtnClicked"
-  }
-  */
 
   this.template = dot.template(IndexTpl);
 

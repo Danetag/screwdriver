@@ -45,7 +45,7 @@ _.extend(MainPage.prototype, AbstractController.prototype);
 
 
 /*
- * @overrided
+ * @override
  */
 MainPage.prototype.init = function() {
 
@@ -57,7 +57,7 @@ MainPage.prototype.init = function() {
 
 
 /*
- * @overrided
+ * @override
  */
 MainPage.prototype.instanceView = function() {
   this.view = new MainView({isViewContainer: true});
@@ -65,7 +65,7 @@ MainPage.prototype.instanceView = function() {
 
 
 /*
- * @overrided
+ * @override
  */
 MainPage.prototype.initLoader = function() {
   this.loader = new Loader();
@@ -74,7 +74,7 @@ MainPage.prototype.initLoader = function() {
 
 
 /*
- * @overrided
+ * @override
  */
 MainPage.prototype.initAssets = function() {
 

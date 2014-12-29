@@ -37,7 +37,7 @@ PageView.prototype.show = function() {
  * @override
  */
 PageView.prototype.hide = function() {
-  TweenLite.to(window, 0.5, { autoAlpha:0, ease:Power2.easeInOut, onComplete:_onHidden.bind(this)});
+  TweenLite.to(this.$el, 0.5, { autoAlpha:0, ease:Power2.easeInOut, onComplete:_onHidden.bind(this)});
 }
 
 

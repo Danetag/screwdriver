@@ -21,11 +21,14 @@ var LoaderViewBasic = AbstractLoaderView.extend(new function (){
    */
   this.canHide = false;
 
+
 });
 
 
 LoaderViewBasic.prototype.initDOM = function() {
+  console.log('LoaderViewBasic initdom');
   this.$bar = this.$el.find('.bar');
+  TweenLite.set( this.$el, { autoAlpha:0});
 }
 
 LoaderViewBasic.prototype.setPct = function(pct) {
@@ -35,7 +38,7 @@ LoaderViewBasic.prototype.setPct = function(pct) {
 }
 
 LoaderViewBasic.prototype.show = function() {
-  this.trigger(EVENT.SHOWN);
+  TweenLite.to( this.$el, 0.3, { autoAlpha:1 , ease:Cubic.easeOut , onComplete:_shown.bind(this)});
 }
 
 LoaderViewBasic.prototype.hide = function() {
@@ -57,10 +60,13 @@ var _checkEnd = function() {
   }
 }
 
-var _hidden = function() {
-  this.trigger(EVENT.HIDDEN);
+var _shown = function() {
+  AbstractLoaderView.prototype.show.call(this);
 }
 
+var _hidden = function() {
+  AbstractLoaderView.prototype.hide.call(this);
+}
 
 
 

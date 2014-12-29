@@ -7,6 +7,8 @@ var $                     = require('jquery'),
     _                     = require('underscore'),
     Backbone              = require('backbone');
 
+
+
 var AboutView = AbstractPageView.extend(new function (){
 
   this.idView = 'about';

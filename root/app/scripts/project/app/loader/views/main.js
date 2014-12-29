@@ -44,11 +44,11 @@ LoaderViewMain.prototype.hide = function() {
 }
 
 var _shown = function() {
-  this.trigger(EVENT.SHOWN);
+  AbstractLoaderView.prototype.show.call(this);
 }
 
 var _hidden = function() {
-  this.trigger(EVENT.HIDDEN);
+  AbstractLoaderView.prototype.hide.call(this);
 }
 
 

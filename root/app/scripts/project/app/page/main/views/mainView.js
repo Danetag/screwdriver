@@ -6,10 +6,16 @@ var $                 = require('jquery'),
     EVENT             = require('event/event'),
     Backbone          = require('backbone');
 
+
+
+/**
+ * MainView: Handles the main view logic - window/document event
+ * @extend {abstract/view/DOM/DOMview}
+ * @constructor
+ */
 var MainView = AbstractDOMView.extend(new function (){
 
   this.el = "body";
-
   this.idView = 'mainpage';
 
   /*
@@ -34,11 +40,20 @@ var MainView = AbstractDOMView.extend(new function (){
 
 });
 
+
+
+/**
+ * @override
+ */
 MainView.prototype.initDOM = function() {
   this.$el.addClass('init');
   this.metaViewport = document.querySelector('meta[name=viewport]');
 }
 
+
+/**
+ * @override
+ */
 MainView.prototype.initSubViews = function() {
   this.menuView = new MenuView();
   this.menuView.init();
@@ -48,6 +63,11 @@ MainView.prototype.initSubViews = function() {
   this.params.assets = {};
 }
 
+
+/**
+ * @override
+ * Bind all the main window/document event here.
+ */
 MainView.prototype.bindEvents = function() {
 
   window.addEventListener("resize",  $.proxy(_onResize, this), false);
@@ -63,16 +83,27 @@ MainView.prototype.bindEvents = function() {
   this.canUpdate = true;
 }
 
+
+/**
+ * @override
+ */
 MainView.prototype.show = function() {
   this.menuView.show();
   AbstractDOMView.prototype.show.call(this);
 }
 
 
+/**
+ * @override
+ */
 MainView.prototype.onResize = function() {
   this.menuView.resize(this.viewport);
 }
 
+
+/**
+ * @override
+ */
 MainView.prototype.onOrientationChange = function() {
 
   var scale = 1;
@@ -85,34 +116,49 @@ MainView.prototype.onOrientationChange = function() {
 }
 
 
+/**
+ * Public interface on toggle menu
+ */
 MainView.prototype.toggleMenu = function() {
   _toggleMenu.call(this);
 }
 
 /* 
  * @override
- * do nothing.
+ * Do nothing here.
  */
 MainView.prototype.dispose = function() {}
 
 
+/**
+ * On menu toggled
+ */
 var _toggleMenu = function() {
   this.$el.toggleClass('nav-shown');
 }
 
 
+/**
+ * On Orientation change
+ */
 var _onOrientationChange = function() {
   this.orientationChange();
   this.trigger(EVENT.ON_ORIENTATION_CHANGE, {viewport: this.viewport});
 }
 
 
+/**
+ * On Resize
+ */
 var _onResize = function(e) { 
   this.resize();
   this.trigger(EVENT.ON_RESIZE, {viewport: this.viewport});
 }
 
 
+/**
+ * On request animation frame
+ */
 var _onRAF = function() {
   this.update();
   this.trigger(EVENT.ON_RAF);
@@ -121,6 +167,9 @@ var _onRAF = function() {
 }
 
 
+/**
+ * On Mouse out
+ */
 var _onMouseOut = function(e) {
   var from = e.relatedTarget || e.toElement;
 
