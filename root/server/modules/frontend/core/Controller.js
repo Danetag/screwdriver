@@ -24,6 +24,7 @@ var controller = (function() {
       this.setBaseUrl(req);
       this.setBasicDatas(req);
       this.setPageDatas(req);
+      this.setHeaders(req, res);
       this.setMenu(req);
 
     },
@@ -97,6 +98,18 @@ var controller = (function() {
       if (this.page.hasLayout == undefined || this.page.hasLayout)
         this.datas.layout = new View(this.config.tplLayoutPath, 'layout.html', this.datas);
 
+    },
+
+    setHeaders: function(req, res) {
+
+      if (this.page == null) return;
+
+      var headers = req.headers['user-agent'];
+
+      if (headers.indexOf('MSIE') > -1) {
+        res.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');
+        this.datas.hasCompatibleMetaHeader = true;
+      }
     },
 
     setMenu: function(req) {
