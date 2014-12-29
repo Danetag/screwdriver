@@ -26,7 +26,6 @@ var LoaderViewBasic = AbstractLoaderView.extend(new function (){
 
 
 LoaderViewBasic.prototype.initDOM = function() {
-  console.log('LoaderViewBasic initdom');
   this.$bar = this.$el.find('.bar');
   TweenLite.set( this.$el, { autoAlpha:0});
 }
