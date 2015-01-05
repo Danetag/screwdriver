@@ -18,12 +18,22 @@ gulp.task('default', function (done) {
       return done();
     }
 
-    gulp.src(__dirname + '/root/**')  // Note use of __dirname to be relative to generator
+    gulp.src([
+        __dirname + '/root/**',
+        '!' + __dirname + '/root/app/img/**',  // Exclude images to avoid Loadash issues 
+      ])  // Note use of __dirname to be relative to generator
       .pipe(template(answers))        // Lodash template support
       .pipe(gulp.dest('./'))          // Without __dirname here = relative to cwd
       .pipe(install())                // Run `bower install` and/or `npm install` if necessary
       .on('finish', function () {
-        done();                       // Finished!
+
+        // Copy images
+        gulp.src(__dirname + '/root/app/img/**')
+            .pipe(gulp.dest('./app/img'))
+            .on('finish', function () {
+              done();                       // Finished!
+            })
+
       });
 
   });
