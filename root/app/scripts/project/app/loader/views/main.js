@@ -12,7 +12,7 @@ var LoaderViewMain = AbstractLoaderView.extend(new function (){
 
   /*
    * Template of a basic loader
-   * @type {template}
+   * @type {dot.template}
    */
   this.template = dot.template(LoaderMainTpl);
 

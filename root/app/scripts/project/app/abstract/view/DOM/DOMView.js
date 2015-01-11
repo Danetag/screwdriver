@@ -35,7 +35,7 @@ var DOMView = AbstractView.extend(new function (){
 
   /**
    * template
-   * @type {dot template}
+   * @type {dot.template}
    */
   this.template = null;
 
