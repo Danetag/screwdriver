@@ -1,11 +1,11 @@
 var View    = require('dot-view').View,
+    config  = require('getconfig'),
     Routes  = require('../routes');
 
 var controller = (function() {
 
   var Controller = function() {
     this.page = null;
-    this.config = null;
     this.lang = 'en';
     this.datas = {};
     this.id = null;
@@ -13,10 +13,9 @@ var controller = (function() {
 
   Controller.prototype = {
 
-    init: function(id, page, config) {
+    init: function(id, page) {
       this.id = id;
       this.page = page;
-      this.config = config;
     },
 
     preAction: function(req, res) {
@@ -40,22 +39,22 @@ var controller = (function() {
       var baseUrl = req.protocol + '://' + req.get('host');
 
       // Base url
-      if (this.config.base_url.length) {
+      if (config.frontend.base_url.length) {
 
-        if (this.config.base_url[0] == '/') {
-          baseUrl += his.config.base_url[0];
+        if (config.frontend.base_url[0] == '/') {
+          baseUrl += config.frontend.base_url[0];
         }
 
-        if (this.config.base_url.indexOf('http')) {
-          baseUrl = this.config.base_url;
+        if (config.frontend.base_url.indexOf('http')) {
+          baseUrl = config.frontend.base_url;
         }
         
       } 
       
       // Maybe wrong here :/
-      this.config.root =  '';
+      config.frontend.root =  '';
 
-      this.config.base_url = baseUrl;
+      config.frontend.base_url = baseUrl;
     },
 
     setBasicDatas: function(req) {
@@ -65,15 +64,15 @@ var controller = (function() {
       this.datas = {};
 
       // First, get config datas
-      for (var prop in this.config) {
-        this.datas[prop] = this.config[prop];
+      for (var prop in config.frontend) {
+        this.datas[prop] = config.frontend[prop];
       }
 
       // Lang
       this.datas.lang = this.lang;
 
       // Is dev ?
-      this.datas.use_src = this.config.use_src;
+      this.datas.use_src = config.frontend.use_src;
       
       // get device
       this.datas.device = req.device.type;
@@ -89,14 +88,14 @@ var controller = (function() {
       if (this.page == null) return;
 
       // get translated datas
-      var translatedDatas = require(this.config.translationPath + this.lang + '/' + this.page.id + '.json');
+      var translatedDatas = require(config.frontend.translationPath + this.lang + '/' + this.page.id + '.json');
       for (var prop in translatedDatas) {
         this.datas[prop] = translatedDatas[prop];
       }
 
       // Display layout?
       if (this.page.hasLayout == undefined || this.page.hasLayout)
-        this.datas.layout = new View(this.config.tplLayoutPath, 'layout.html', this.datas);
+        this.datas.layout = new View(config.frontend.tplLayoutPath, 'layout.html', this.datas);
 
     },
 

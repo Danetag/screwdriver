@@ -20,7 +20,11 @@
   ],
   "keywords": [],
   "dependencies": {
-    "express": "4.x"
+    "express": "4.x",
+    "getconfig": "x",
+    "node-uuid": "x",
+    "socket.io": "x",
+    "yetify": "x"
   },
   "devDependencies": {
     "autoprefixer-stylus": "x",

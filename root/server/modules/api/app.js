@@ -1,30 +1,27 @@
-var mod = (function() {
+var config      = require('getconfig');
 
-  var APIModule = function() {
+var APIModule = function() {
 
-    this.app = null;
+  this.app = null;
 
-  }
+}
 
-  APIModule.prototype = {
+APIModule.prototype = {
 
-    init: function(app) {
+  init: function(app) {
 
-      this.app = app;
+    this.app = app;
 
-      this.initRouting();
-    },
+    this.initRouting();
+  },
 
-    initRouting: function() {
+  initRouting: function() {
 
-
-    }
 
   }
 
-  return APIModule;
-  
-})();
+}
 
-module.exports = new mod();
+
+module.exports = new APIModule();
 

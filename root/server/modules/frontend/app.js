@@ -1,14 +1,12 @@
 var path        = require('path'),
     onlyScripts = require('../../util/scriptFilter');
-    common      = require('./common'),
+    pages       = require('./datas/pages').pages,
     routes      = require('./routes'),
     express     = require('express'),
+    config      = require('getconfig'),
     i18n        = require('i18n'),
     dot         = require('dot-view'),
     fs          = require('fs');
-
-var config  = common.config();
-var pages   = common.pages();
 
 var FrontEndModule = function() {
 
@@ -37,49 +35,49 @@ FrontEndModule.prototype = {
 
 var _initConfig = function() {
 
-  config.translationPath = __dirname + '/datas/translations/';
-  config.baseLanguage    = "en";
-  config.tplPath = global.APP.basePath + '/tpl';
-  config.tplLayoutPath = config.tplPath + '/layout';
-  config.tplPartialPath = config.tplPath + '/partial';
+  config.frontend.translationPath = __dirname + '/datas/translations/';
+  config.frontend.baseLanguage    = "en";
+  config.frontend.tplPath = global.APP.basePath + '/tpl';
+  config.frontend.tplLayoutPath = config.frontend.tplPath + '/layout';
+  config.frontend.tplPartialPath = config.frontend.tplPath + '/partial';
 
 }
 
 var initLanguages_ = function() {
 
-  var languages = fs.readdirSync(config.translationPath);
+  var languages = fs.readdirSync(config.frontend.translationPath);
   var self = this;
 
-  config.aLang = [];
+  config.frontend.aLang = [];
 
   languages.forEach(function(language) {
-    config.aLang.push(language);
+    config.frontend.aLang.push(language);
   });
 
 }
 
 var initEnv_ = function() {
 
-  i18n.configure({locales:config.aLang})
+  i18n.configure({locales:config.frontend.aLang})
   this.app.use(i18n.init);
 
   // Error
-  if (config.display_error) {
+  if (config.frontend.display_error) {
     this.app.enable('verbose errors');  
   } else {
     this.app.disable('verbose errors');  
   }
 
   // Base url
-  if (config.base_url === undefined) {
-    config.base_url = "";
+  if (config.frontend.base_url === undefined) {
+    config.frontend.base_url = "";
   }
 
 }
 
 var initControllers_ = function() {
 
-  var controllers = fs.readdirSync(__dirname + '/controllers/').filter(onlyScripts); //Filter out DS_STORE files for instance
+  var controllers = fs.readdirSync(__dirname + '/controllers/').filter(onlyScripts.file); //Filter out DS_STORE files for instance
   var self = this;
 
   controllers.forEach(function(ctrl) {
@@ -99,7 +97,7 @@ var initControllers_ = function() {
       }
     }
 
-    controller.init(pageId, page, config);
+    controller.init(pageId, page);
 
     self.aControllers[pageId] = controller;
 
@@ -110,7 +108,7 @@ var initControllers_ = function() {
 var initViews_ = function() {
 
   //this.app.set('views', path.join(__dirname, 'views'));
-  this.app.set('views', config.tplPath);
+  this.app.set('views', config.frontend.tplPath);
   this.app.set('view engine', 'html');
 
   this.app.engine('html', dot.__express);
@@ -119,13 +117,13 @@ var initViews_ = function() {
   this.app.use(require('express-device').capture());
 
   // Static assets
-  this.app.use(express.static(__dirname + '/../../..' + config.folder));
+  this.app.use(express.static(__dirname + '/../../..' + config.frontend.folder));
 }
 
 var initRoutes_ = function() {
 
   // Init the routes
-  routes.init(config);
+  routes.init();
 
   // Set the controllers
   for (var i in routes.aRoutes) {
@@ -138,7 +136,7 @@ var initRoutes_ = function() {
     var controller = this.aControllers[route.controller];
 
     if (controller === undefined) {
-      return new Error('The specified controller "'+ route.controller + 'Controller" doesn\'t exist');
+      throw new Error('The specified controller "'+ route.controller + 'Controller" doesn\'t exist');
     }
 
     route.controller = controller;
@@ -191,6 +189,9 @@ var initRoutes_ = function() {
     // we may use properties of the error object
     // here and next(err) appropriately, or if
     // we possibly recovered from the error, simply next().
+
+    console.log('err', err);
+    //console.log('req', req);
     res.status(err.status || 500);
     res.render('500', { error: err });
   });
