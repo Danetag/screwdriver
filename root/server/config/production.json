@@ -17,16 +17,12 @@
         {"url": "stun:stun.l.google.com:19302"}
     ],
     "turnservers" : [
-        /*
-        { "url": "turn:your.turn.server.here",
-          "secret": "turnserversharedsecret"
-          "expiry": 86400 }
-          */
+
     ],
-    "frontend": {
+    "frontend" : {
         "base_url": "",
         "folder": "/www",
-        "display_error": 1,
+        "display_error": 0,
         "use_src": 0
     }
 }
