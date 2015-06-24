@@ -37,6 +37,8 @@
     "gulp": "x",
     "gulp-autoprefixer": "x",
     "gulp-concat": "x",
+    "gulp-iconfont": "x",
+    "gulp-iconfont-css": "x",
     "gulp-imagemin": "x",
     "gulp-inject": "x",
     "gulp-jsdoc": "x",
@@ -51,13 +53,16 @@
     "gulp-uglify": "x",
     "gulp-util": "x",
     "gulp-watch": "x",
+    "gulp-webp": "x",
     "i18n": "x",
+    "jquery": "x",
     "monk": "x",
     "mongodb": "x",
-    "jquery": "x",
     "nib": "x",
+    "run-sequence": "x",
     "stringify": "x",
     "underscore": "x",
-    "vinyl-source-stream": "x"
+    "vinyl-source-stream": "x",
+    "watchify": "x"
   }
 }

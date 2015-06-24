@@ -1,11 +1,10 @@
-var gulp = require('gulp');
+var gulp 					= require('gulp'),
+		runSequence 	= require('run-sequence');
 
-gulp.task('copyAndImgMin', ['copy'], function(cb, err){
-  gulp.start('imgmin');
-  cb(err);
-});
+gulp.task('build', function(cb){
 
-gulp.task('build', [ 'work', 'copyAndImgMin'], function(){
-  gulp.start('minify');
-  gulp.start('uglify');
+	runSequence('cleanDist','work','copy',
+							['imgmin','minify','uglify'],
+              cb);
+
 });

@@ -3,6 +3,6 @@ var gulp   = require('gulp'),
 
 
 gulp.task('doc', [], function(cb, err) {
-  gulp.src("./app/scripts/project/**/*.js")
+  return gulp.src("./app/scripts/project/**/*.js")
       .pipe(jsdoc('./doc'))
 });

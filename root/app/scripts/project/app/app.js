@@ -57,7 +57,7 @@ var _loadJsonConfig = function() {
 
   this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this));
 
-  this.loader.addItem({ src: "/datas/config.json" , id:"config" })
+  this.loader.addItem({ src: "/static/config/config.json" , id:"config" })
   this.loader.addItem({ src: "/routes.json" , id:"routes" })
 
   this.loader.start();

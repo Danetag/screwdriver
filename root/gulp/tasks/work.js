@@ -1,7 +1,8 @@
-var gulp = require('gulp');
+var gulp 					= require('gulp'),
+		runSequence 	= require('run-sequence');
 
-gulp.task('work', ['cleanJS', 'stylus', 'concatLib', 'buildJSProject'], function(cb, err){
+gulp.task('work', function(cb, err){
 
-  cb(err);
+	return runSequence(['cleanJS', 'iconfonts', 'concatLib', 'buildJSProject', 'webp'], 'stylus', cb);
   
 });

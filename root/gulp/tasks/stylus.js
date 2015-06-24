@@ -1,22 +1,20 @@
 var gulp          = require('gulp'),
     stylus        = require('gulp-stylus'),
     livereload    = require('gulp-livereload'),
+    config        = require('../util/utils').getConfig(),
     sourcemaps    = require('gulp-sourcemaps'),
-    //autoprefixer  = require('autoprefixer-stylus'), //waiting for a fix
     autoprefixer  = require('gulp-autoprefixer'),
     plumber       = require('gulp-plumber');
 
 gulp.task('stylus', function(cb, err) {
-  gulp.src('./app/css/styl/app.styl')
+
+  return gulp.src(config.stylus.src)
     .pipe(plumber())
     .pipe(sourcemaps.init())
-    .pipe(stylus({
-      //use: [autoprefixer()]
-    }))
+    .pipe(stylus())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('app/css'))
-    .pipe(autoprefixer())
-    .pipe(livereload({ auto: false }));
+    .pipe(gulp.dest(config.stylus.dest))
+    .pipe(autoprefixer(config.stylus.autoprefixer))
+    .pipe(livereload());
 
-  cb(err);
 });

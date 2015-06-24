@@ -1,0 +1,155 @@
+{
+	"desktop": {
+		"browserify" : {
+			"entry": "app/scripts/project/main.js",
+			"source": "project.js",
+			"paths": [ "app/scripts/project/", "app/scripts/project/app/", "node_modules", "tpl"],
+			"dest" : "app/js"
+		},
+		"buildJSProject": {
+			"src": ["app/js/lib.js", "app/js/project.js"],
+			"concat" : "app.js",
+			"dest" : "app/js"
+		},
+		"cleanDist" : {
+			"src": ["dist"]
+		},
+		"cleanJS": {
+			"src": ["app/js/*.js"]
+		},
+		"concatLib": {
+			"src": ["app/scripts/vendor/*.js"],
+			"filename" : "lib.js",
+			"dest" : "app/js"
+		},
+		"copy" : {
+			"static" : {
+				"src" : "app/static/**/**.*",
+				"dest" : "dist/static"
+			}
+		},
+		"imgmin" : {
+			"src" : "dist/static/img/default/**/*.*",
+			"dest" : "dist/static/img/default"
+		},
+		"minify" : {
+			"src" : "app/css/app.css",
+			"dest" : "dist/css",
+			"noScript" : {
+				"src" : "app/css/noscript.css",
+				"dest" : "dist/css"
+			}
+		},
+		"stylus": {
+			"src": ["app/styl/app.styl","app/styl/noscript.styl"],
+			"dest" : "app/css",
+			"autoprefixer" : {
+				"browsers": ["last 4 version", "safari 5", "ie 8", "ie 9", "ff 17", "opera 12.1", "ios 6", "android 4"]
+			}
+		},
+		"iconfont": {
+			"svg" : {
+				"src" : "app/static/ui/svg-sprites/*.svg"
+			},
+			"css" : {
+				"src" : "app/static/ui/iconfont/templates/_icons.css"
+			},
+			"stylus" : {
+				"dest" : "../../../styl/_iconfont.styl"
+			},
+			"fontPath": "../static/fonts/icons/",
+			"dest": "app/static/fonts/icons"
+		},
+		"uglify": {
+			"src": "app/js/app.js",
+			"dest" : "dist/js"
+		},
+		"webp": {
+			"src" : "app/static/img/default/**/*",
+			"dest" : "app/static/img/webp"
+		},
+		"watch": {
+			"stylus": { 
+				"src": "app/styl/*.styl" 
+			},
+			"vendor": {
+				"src": "app/scripts/vendor/**/*.js"
+			}
+		}
+	},
+
+	"mobile": {
+		"browserify" : {
+			"entry": "app/scripts/project/main.js",
+			"source": "project.js",
+			"paths": [ "app/scripts/project/", "app/scripts/project/app/", "node_modules", "tpl"],
+			"dest" : "app/js"
+		},
+		"buildJSProject": {
+			"src": ["app/js/lib.js", "app/js/project.js"],
+			"concat" : "app.js",
+			"dest" : "app/js"
+		},
+		"cleanDist" : {
+			"src": ["dist"]
+		},
+		"cleanJS": {
+			"src": ["app/js/*.js"]
+		},
+		"concatLib": {
+			"src": ["app/scripts/vendor/*.js"],
+			"filename" : "lib.js",
+			"dest" : "app/js"
+		},
+		"copy" : {
+			"static" : {
+				"src" : "app/static/**.*",
+				"dest" : "dist/static"
+			}
+		},
+		"imgmin" : {
+			"src" : "dist/static/img/default/**/*.*",
+			"dest" : "dist/static/img/default"
+		},
+		"minify" : {
+			"src" : ["app/css/app.css", "app/css/noscript.css"],
+			"dest" : "dist/css"
+		},
+		"stylus": {
+			"src": ["app/styl/app.styl","app/styl/noscript.styl"],
+			"dest" : "app/css",
+			"autoprefixer" : {
+				"browsers": ["last 4 version", "safari 5", "ie 8", "ie 9", "ff 17", "opera 12.1", "ios 6", "android 4"]
+			}
+		},
+		"iconfont": {
+			"svg" : {
+				"src" : "app/static/ui/svg-sprites/*.svg"
+			},
+			"css" : {
+				"src" : "app/static/ui/iconfont/_iconfont.css"
+			},
+			"stylus" : {
+				"dest" : "app/styl/_iconfont.styl"
+			},
+			"fontPath": "app/static/ui/iconfont",
+			"destFontPath": "app/static/ui/iconfont"
+		},
+		"uglify": {
+			"src": "app/js/app.js",
+			"dest" : "'dist/js"
+		},
+		"webp": {
+			"src" : "app/static/img/default/**/*",
+			"dest" : "app/static/img/webp"
+		},
+		"watch": {
+			"stylus": { 
+				"src": "app/styl/*.styl" 
+			},
+			"vendor": {
+				"src": "app/scripts/vendor/**/*.js"
+			}
+		}
+	}
+}

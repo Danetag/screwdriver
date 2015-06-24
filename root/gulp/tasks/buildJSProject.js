@@ -1,12 +1,11 @@
 var gulp      = require('gulp'),
+		config 		= require('../util/utils').getConfig(),
     concat    = require('gulp-concat');
 
 gulp.task('buildJSProject', ['browserify'], function(cb, err) {
-  
-  gulp.src(['app/js/lib.js', 'app/js/project.js'])
-  .pipe(concat('app.js'))
-  .pipe(gulp.dest('app/js'));
 
-  cb(err);
+  return gulp.src(config.buildJSProject.src)
+  	.pipe(concat(config.buildJSProject.concat))
+  	.pipe(gulp.dest(config.buildJSProject.dest));
   
 });

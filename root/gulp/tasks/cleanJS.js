@@ -1,10 +1,10 @@
-var gulp    = require('gulp'),
-    clean   = require('gulp-rimraf');
+var gulp    	= require('gulp'),
+		config 		= require('../util/utils').getConfig(),
+    clean     = require('gulp-rimraf');
 
-gulp.task('cleanJS', function() {
+gulp.task('cleanJS', function(cb, err) {
 
-  // App
-  gulp.src(['./app/js/*.js'])
-  .pipe(clean());
+  return gulp.src(config.cleanJS.src)
+  					 .pipe(clean());
 
 });

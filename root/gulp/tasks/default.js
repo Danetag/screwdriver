@@ -1,3 +1,8 @@
-var gulp = require('gulp');
+var gulp 					= require('gulp'),
+		runSequence 	= require('run-sequence');
 
-gulp.task('default', ['work', 'watch']);
+gulp.task('default', function(cb){
+
+	runSequence('work', 'watch', cb);
+	
+});
