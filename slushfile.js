@@ -20,7 +20,7 @@ gulp.task('default', function (done) {
 
     gulp.src([
         __dirname + '/root/**',
-        '!' + __dirname + '/root/app/img/**',  // Exclude images to avoid Loadash issues 
+        '!' + __dirname + '/root/app/static/**',  // Exclude images to avoid Loadash issues 
       ])  // Note use of __dirname to be relative to generator
       .pipe(template(answers))        // Lodash template support
       .pipe(gulp.dest('./'))          // Without __dirname here = relative to cwd
@@ -28,8 +28,8 @@ gulp.task('default', function (done) {
       .on('finish', function () {
 
         // Copy images
-        gulp.src(__dirname + '/root/app/img/**')
-            .pipe(gulp.dest('./app/img'))
+        gulp.src(__dirname + '/root/app/static/**')
+            .pipe(gulp.dest('./app/static'))
             .on('finish', function () {
               done();                       // Finished!
             })
