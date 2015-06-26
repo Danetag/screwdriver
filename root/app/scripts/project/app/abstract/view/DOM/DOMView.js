@@ -72,12 +72,16 @@ var DOMView = function (options, datas){
    */
   this.dataID =  (this.dataID != undefined) ? this.dataID : null;
 
-  AbstractView.call(this, options, datas);
+  AbstractView.call(this);
+  Backbone.View.call(this, options, datas);
 
 };
 
-_.extend(DOMView, AbstractView);
+_.extend(DOMView, Backbone.View);
+
+// Composition!
 _.extend(DOMView.prototype, AbstractView.prototype);
+_.extend(DOMView.prototype, Backbone.View.prototype);
 
 
 /**
@@ -119,7 +123,7 @@ DOMView.prototype.init = function(params, assets) {
   this.appendToContainer();
 
   this.initSubViews();
-  this.resize();
+  this.onResize();
 
   AbstractView.prototype.init.call(this);
 }

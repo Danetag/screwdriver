@@ -274,7 +274,7 @@ var _bindPageManagerEvents = function() {
  */
 var _onOrientationChange = function(e) {
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.orientationChange();
+    this.pageManager.currentPage.view.onOrientationChange();
   }
 }
 
@@ -286,17 +286,17 @@ var _onOrientationChange = function(e) {
 var _onResize = function(e) { 
   
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.resize();
+    this.pageManager.currentPage.view.onResize();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.resize();
+    this.loader.loaderView.onResize();
   }
 
   // Current Loader
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.loader != null && this.pageManager.currentPage.loader.loaderView != null) {
-    this.pageManager.currentPage.loader.loaderView.resize();
+    this.pageManager.currentPage.loader.loaderView.onResize();
   }
 
 }
@@ -350,12 +350,12 @@ var _onMouseOut = function(e) {
 var _onMouseMove = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseMove();
+    this.pageManager.currentPage.view.onMouseMove();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseMove();
+    this.loader.loaderView.onMouseMove();
   }
 }
 
@@ -367,12 +367,12 @@ var _onMouseMove = function(e) {
 var _onMouseDown = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseDown();
+    this.pageManager.currentPage.view.onMouseDown();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseDown();
+    this.loader.loaderView.onMouseDown();
   }
 }
 
@@ -384,12 +384,12 @@ var _onMouseDown = function(e) {
 var _onMouseUp = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseUp();
+    this.pageManager.currentPage.view.onMouseUp();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseUp();
+    this.loader.loaderView.onMouseUp();
   }
 }
 

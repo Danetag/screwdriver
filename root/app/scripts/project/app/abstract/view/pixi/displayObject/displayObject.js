@@ -1,7 +1,5 @@
 'use strict';
 
-// var $             = require('zepto-browserify').$,
-//     Backbone      = require('backbone'),
 var EVENT         = require('event/event');
 
 
@@ -13,7 +11,6 @@ var EVENT         = require('event/event');
  */
 var DisplayObject = function (options_){
 
-  //AbstractView.call(this, options_);
   PIXI.Container.call(this);
 
   this.options = options_;
@@ -23,7 +20,6 @@ var DisplayObject = function (options_){
   this.isInit = false;
 
   _.extend(this, Backbone.Events);
-
 
 };
 

@@ -20,5 +20,4 @@ var IndexView = function (options, datas){
 _.extend(IndexView, AbstractPageView);
 _.extend(IndexView.prototype, AbstractPageView.prototype);
 
-
 module.exports = IndexView;

@@ -3,7 +3,6 @@
 
 var AbstractDOMView         = require('abstract/view/DOM/DOMView'),
     MenuView                = require('page/main/views/menu/menuView'),
-    //BtnMenuView             = require('page/main/views/menu/btnMenuView'),
     EVENT                   = require('event/event'),
     Config                  = require('config/config'),
     CV                      = require('config/currentValues'),
@@ -84,12 +83,6 @@ var MainView = function (options, datas){
    */
   this.analytics = null;
 
-  /**
-   * scroll Y value
-   * @type {number}
-   */
-  this.scrollY = 0;
-
 
   AbstractDOMView.call(this, options, datas);
 
@@ -114,15 +107,9 @@ MainView.prototype.initDOM = function() {
  * @override
  */
 MainView.prototype.initSubViews = function() {
-
   
   this.menuView = new MenuView({el: $("#menu")});
   this.menuView.init();
-
-  /*
-  this.btnMenuView = new BtnMenuView();
-  this.btnMenuView.init({$container: this.$el, prepend:true});
-  */
 
   // Destroy assets references
   this.assets = null;
@@ -133,13 +120,6 @@ MainView.prototype.initSubViews = function() {
  * @override
  */
 MainView.prototype.bindEvents = function() {
-  /*
-  this.listenTo(this.btnMenuView, EVENT.TOGGLE_MENU, $.proxy(_toggleMenu, this));
-  this.listenTo(this.btnMenuView, EVENT.TOGGLE_SUB_MENU, $.proxy(_toggleSubMenu, this));
-  this.listenTo(this.menuView, EVENT.TOGGLE_MENU, $.proxy(_toggleMenu, this));
-  this.listenTo(this.menuView, EVENT.TOGGLE_SUB_MENU, $.proxy(_toggleSubMenu, this));
-  */
-  
   this.canUpdate = true;
 }
 
@@ -215,58 +195,6 @@ MainView.prototype.hideSubviews = function() {
 
 
 /**
- * @override
- */
-MainView.prototype.onResize = function() {
-
-  if (!this.isInit) return;
-
-}
-
-/**
- * @override
- */
-MainView.prototype.onUpdate = function() {
-
-}
-
-/**
- * @override
- */
-MainView.prototype.onScroll = function() {
-  
-}
-
-
-MainView.prototype.onMouseMove = function() {
-
-}
-
-
-MainView.prototype.onMouseDown = function() {
-
-}
-
-
-MainView.prototype.onMouseUp = function() {
-
-}
-
-
-MainView.prototype.onMouseOut = function(outWindow_) {
-
-}
-
-/**
- * @override
- */
-MainView.prototype.onOrientationChange = function() {
-
-}
-
-
-
-/**
  * Clear current content
  */
 MainView.prototype.cleanCurrentContent = function() {
@@ -304,7 +232,7 @@ var _onOrientationChange = function() {
  */
 var _onScroll = function(e) {
 
-  this.scrollY = window.scrollY || window.pageYOffset;
+  CV.scrollY = window.scrollY || window.pageYOffset;
 
   this.onScroll();
   this.trigger(EVENT.ON_SCROLL);
@@ -318,7 +246,7 @@ var _onResize = function() {
 
   console.log('MainResize:CV', CV.viewport);
 
-  this.resize();
+  this.onResize();
   this.trigger(EVENT.ON_RESIZE);
 
 };
@@ -362,8 +290,6 @@ var _onTouchStart = function(e) {
 
 var _onMouseDown = function(e) {
 
-  e.preventDefault();
-
   CV.mouse.x = e.clientX || e.pageX;
   CV.mouse.y = e.clientY || e.pageY;
 
@@ -383,8 +309,6 @@ var _onTouchMove = function(e) {
 
 
 var _onMouseMove = function(e) {
-
-  e.preventDefault();
 
   CV.mouse.x = e.clientX || e.pageX;
   CV.mouse.y = e.clientY || e.pageY;

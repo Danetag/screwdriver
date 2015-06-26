@@ -1,15 +1,14 @@
 'use strict';
 
 
-var EVENT     = require('event/event'),
-    Config    = require('config/config')
+var EVENT     = require('event/event');
 
 /**
  * View: Defines a view with basic methods
  * @extend {Backbone.View}
  * @constructor
  */
-var View = function (options, datas){
+var View = function (){
 
   /**
    * Object as associative array of all the <Timeline> objects
@@ -41,12 +40,7 @@ var View = function (options, datas){
    */
   this.canTriggerInit = (this.canTriggerInit != undefined) ? this.canTriggerInit : true;
 
-  Backbone.View.call(this, options, datas);
-
 };
-
-_.extend(View, Backbone.View);
-_.extend(View.prototype, Backbone.View.prototype);
 
 
 /**
@@ -54,6 +48,7 @@ _.extend(View.prototype, Backbone.View.prototype);
  *  Usefull when we have to wait for computer procesing, like canvas initialization for instance.
  */
 View.prototype.init = function() {
+  
   if (this.isInit) return;
   
   this.bindEvents();
@@ -90,46 +85,6 @@ View.prototype.unbindEvents = function() {
 View.prototype.update = function() {
   if (this.canUpdate) this.onUpdate();
 }
-
-
-/**
- * Called on resize
- */
-View.prototype.resize = function() {
-  this.onResize();
-}
-
-
-/**
- * Called on orientationChange
- */
-View.prototype.orientationChange = function() {
-  this.onOrientationChange();
-}
-
-/**
- * Called on mouseMove
- */
-View.prototype.mouseMove = function() {
-  this.onMouseMove();
-}
-
-
-/**
- * Called on mouseDown
- */
-View.prototype.mouseDown = function() {
-  this.onMouseDown();
-}
-
-
-/**
- * Called on mouseUp
- */
-View.prototype.mouseUp = function() {
-  this.onMouseUp();
-}
-
 
 /**
  * Called on mouseOut

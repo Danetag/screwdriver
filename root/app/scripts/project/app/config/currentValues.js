@@ -20,6 +20,12 @@ var CurrentValues = function (){
    */
   this.outWindow = false;
 
+  /**
+   * scroll Y value
+   * @type {number}
+   */
+  this.scrollY = 0;
+
 }
 
 

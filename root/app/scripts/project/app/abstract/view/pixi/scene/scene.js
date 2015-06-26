@@ -1,6 +1,6 @@
 'use strict';
 
-var   AbstractView  = require('abstract/pixi/view'),
+var   AbstractView  = require('abstract/view/view'),
       Config        = require('config/config'),
       EVENT         = require('event/event');
 
@@ -11,7 +11,6 @@ var   AbstractView  = require('abstract/pixi/view'),
  */
 var Scene = function (options_){
 
-  //PIXI.DisplayObjectContainer.call(this);
   this.id = (this.id != undefined) ? this.id : "canvas-pixy";
 
   this.stage = null;
@@ -24,7 +23,7 @@ var Scene = function (options_){
     resolution:1
   }
 
-  AbstractView.call(this, options_);
+  AbstractView.call(this);
 
 };
 
@@ -44,23 +43,11 @@ Scene.prototype.init = function() {
 
 Scene.prototype.initScene = function() {
 
-
-  //if( Detectizr.browser.name == 'ie' && Detectizr.browser.version <= 10 ){
-    // force a simple canvas renderer.
-    // this doesn't help
-   // this.renderer = PIXI.autoDetectRenderer($(document).width(), $(window).height(), this.rendererOptions);
-    //return false;
- // }else{
-  //  // create a renderer instance.
-    this.renderer = PIXI.autoDetectRenderer($(document).width(), $(window).height(), this.rendererOptions);
-  //}
-
-  //console.log(" ----- renderer " , this.renderer );
+  this.renderer = PIXI.autoDetectRenderer($(document).width(), $(window).height(), this.rendererOptions);
 
   this.renderer.view.id = this.id;
 
   this.stage = new PIXI.Container();
-  //this.stage.interactive = true;
 
   this.options.$container.append(this.renderer.view);
 
@@ -85,8 +72,7 @@ Scene.prototype.onUpdate = function() {
 Scene.prototype.onResize = function() {
 
   if (this.renderer != null) {
-    //console.log('scene resize', this.viewport.width, Config.mainView.viewport.width, "$(document).width()", $(document).width() , "$(window).width()", $(window).width(), 'document.body.clientWidth', document.body.clientWidth) ;
-    this.renderer.resize(this.viewport.width, this.viewport.height);
+    this.renderer.resize();
   }
     
 
@@ -97,8 +83,7 @@ Scene.prototype.onResize = function() {
  */
 Scene.prototype.dispose = function() {
   this.canUpdate = false;
-
-  //this.stage.removeStageReference();
+  
   this.stage = null;
   this.renderer = null;
 
