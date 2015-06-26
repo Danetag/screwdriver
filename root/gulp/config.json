@@ -18,7 +18,16 @@
 			"src": ["app/js/*.js"]
 		},
 		"concatLib": {
-			"src": ["app/scripts/vendor/*.js"],
+			"src": [
+					"app/scripts/vendor/modernizr.custom.js",
+					"app/scripts/vendor/detectizr.min.js",
+					"app/scripts/vendor/zepto.js",
+					"app/scripts/vendor/preloadjs-0.6.0.combined.js",
+					"app/scripts/vendor/TweenMax.min.js",
+					"app/scripts/vendor/ScrollToPlugin.js",
+					"app/scripts/vendor/underscore.js",
+					"app/scripts/vendor/backbone.js"
+			],
 			"filename" : "lib.js",
 			"dest" : "app/js"
 		},
