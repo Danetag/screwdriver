@@ -69,7 +69,7 @@ MainPage.prototype.init = function() {
  */
 MainPage.prototype.instanceView = function() {
 
-  this.view = Config.mainView = new MainView({isViewContainer: true});
+  this.view = new MainView({isViewContainer:true});
 
   // Bind the main events now
   this.view.bindMainEvents();
@@ -86,7 +86,8 @@ MainPage.prototype.initLoader = function() {
   this.loader = new Loader();
   this.loader.init(new LoaderViewMain());
 
-  _onResize.call(this);
+  // Force resize to have the actual browser size available
+  this.view.forceResize();
 }
 
 
@@ -156,8 +157,6 @@ MainPage.prototype.cleanCurrentContent = function() {
  */
 MainPage.prototype.loaderComplete = function() {
 
-  console.log('MainPage.prototype.loaderComplete');
-
   // Give the datas + assets of the current page to the current page
   this.pageManager.currentPage.getCurrentDatas(this.currentDatas, this.loader);
   this.pageManager.currentPage.getCurrentAssets(undefined, this.loader);
@@ -219,7 +218,7 @@ var _mainViewShown = function() {
  * @private
  */
 var _currentPageViewShown = function() {
-  
+
   this.loader.dispose();
   this.loader = null;
 
@@ -274,9 +273,8 @@ var _bindPageManagerEvents = function() {
  * @private
  */
 var _onOrientationChange = function(e) {
-  var viewport = (e != undefined) ? e.viewport : undefined;
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.orientationChange(viewport);
+    this.pageManager.currentPage.view.orientationChange();
   }
 }
 
@@ -286,20 +284,19 @@ var _onOrientationChange = function(e) {
  * @private
  */
 var _onResize = function(e) { 
-  var viewport = (e != undefined) ? e.viewport : undefined;
   
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.resize(viewport);
+    this.pageManager.currentPage.view.resize();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.resize(viewport);
+    this.loader.loaderView.resize();
   }
 
   // Current Loader
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.loader != null && this.pageManager.currentPage.loader.loaderView != null) {
-    this.pageManager.currentPage.loader.loaderView.resize(viewport);
+    this.pageManager.currentPage.loader.loaderView.resize();
   }
 
 }
@@ -336,12 +333,12 @@ var _onRAF = function(e) {
  */
 var _onMouseOut = function(e) {
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.onMouseOut(e.outWindow);
+    this.pageManager.currentPage.view.onMouseOut();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.onMouseOut(e.outWindow);
+    this.loader.loaderView.onMouseOut();
   }
 }
 
@@ -353,12 +350,12 @@ var _onMouseOut = function(e) {
 var _onMouseMove = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseMove(e.mouse);
+    this.pageManager.currentPage.view.mouseMove();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseMove(e.mouse);
+    this.loader.loaderView.mouseMove();
   }
 }
 
@@ -370,12 +367,12 @@ var _onMouseMove = function(e) {
 var _onMouseDown = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseDown(e.mouse);
+    this.pageManager.currentPage.view.mouseDown();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseDown(e.mouse);
+    this.loader.loaderView.mouseDown();
   }
 }
 
@@ -387,12 +384,12 @@ var _onMouseDown = function(e) {
 var _onMouseUp = function(e) {
 
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
-    this.pageManager.currentPage.view.mouseUp(e.mouse);
+    this.pageManager.currentPage.view.mouseUp();
   }
 
   // Main Loader
   if (this.loader != null && this.loader.loaderView != null) {
-    this.loader.loaderView.mouseUp(e.mouse);
+    this.loader.loaderView.mouseUp();
   }
 }
 

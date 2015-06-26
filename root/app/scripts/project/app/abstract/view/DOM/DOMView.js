@@ -157,7 +157,6 @@ DOMView.prototype.render = function() {
   }
 
   // No need to render anything
-  // Deprecated
   if (this.options.isViewContainer) {
 
     if (this.id != null) {

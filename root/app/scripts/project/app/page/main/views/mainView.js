@@ -6,6 +6,7 @@ var AbstractDOMView         = require('abstract/view/DOM/DOMView'),
     //BtnMenuView             = require('page/main/views/menu/btnMenuView'),
     EVENT                   = require('event/event'),
     Config                  = require('config/config'),
+    CV                      = require('config/currentValues'),
     Analytics               = require('app/tools/analytics');
 
 
@@ -16,7 +17,7 @@ var AbstractDOMView         = require('abstract/view/DOM/DOMView'),
  */
 var MainView = function (options, datas){
 
-  this.el = document.body;
+  this.el     = document.body;
   this.idView = 'mainpage';
 
   /*
@@ -199,11 +200,7 @@ MainView.prototype.bindMainEvents = function() {
  * @override
  */
 MainView.prototype.show = function() {
-
   this.$el.addClass('show');
-
-  //this.btnMenuView.show();
-
   AbstractDOMView.prototype.show.call(this);
 }
 
@@ -299,9 +296,7 @@ MainView.prototype.dispose = function() {}
  * On Orientation change
  */
 var _onOrientationChange = function() {
-
   _onResize.call(this);
-
 }
 
 /**
@@ -318,12 +313,13 @@ var _onScroll = function(e) {
 
 var _onResize = function() {
 
+  CV.viewport.width = $(document).width()
+  CV.viewport.height = $(window).height();
 
-  this.viewport.width = $(document).width()
-  this.viewport.height = $(window).height();
+  console.log('MainResize:CV', CV.viewport);
 
-  this.resize(this.viewport);
-  this.trigger(EVENT.ON_RESIZE, {viewport: this.viewport});
+  this.resize();
+  this.trigger(EVENT.ON_RESIZE);
 
 };
 
@@ -344,23 +340,23 @@ var _onRAF = function() {
  */
 var _onMouseOut = function(e) {
   var from = e.relatedTarget || e.toElement;
-  var outWindow = false;
+  CV.outWindow = false;
 
-  if (!from || from.nodeName == "HTML") outWindow = true;
+  if (!from || from.nodeName == "HTML") CV.outWindow = true;
 
-  this.onMouseOut(outWindow);
-  this.trigger(EVENT.ON_MOUSE_OUT, {outWindow: outWindow});
+  this.onMouseOut();
+  this.trigger(EVENT.ON_MOUSE_OUT);
 }
 
 
 
 var _onTouchStart = function(e) {
 
-  this.mouse.x = e.touches[0].clientX;
-  this.mouse.y = e.touches[0].clientY;
+  CV.mouse.x = e.touches[0].clientX;
+  CV.mouse.y = e.touches[0].clientY;
 
   this.onMouseDown();
-  this.trigger(EVENT.ON_MOUSE_DOWN, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_DOWN);
 }
 
 
@@ -368,20 +364,20 @@ var _onMouseDown = function(e) {
 
   e.preventDefault();
 
-  this.mouse.x = e.clientX || e.pageX;
-  this.mouse.y = e.clientY || e.pageY;
+  CV.mouse.x = e.clientX || e.pageX;
+  CV.mouse.y = e.clientY || e.pageY;
 
   this.onMouseDown();
-  this.trigger(EVENT.ON_MOUSE_DOWN, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_DOWN);
 }
 
 var _onTouchMove = function(e) {
 
-  this.mouse.x = e.touches[0].clientX;
-  this.mouse.y = e.touches[0].clientY;
+  CV.mouse.x = e.touches[0].clientX;
+  CV.mouse.y = e.touches[0].clientY;
 
   this.onMouseMove();
-  this.trigger(EVENT.ON_MOUSE_MOVE, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_MOVE);
 
 }
 
@@ -390,11 +386,11 @@ var _onMouseMove = function(e) {
 
   e.preventDefault();
 
-  this.mouse.x = e.clientX || e.pageX;
-  this.mouse.y = e.clientY || e.pageY;
+  CV.mouse.x = e.clientX || e.pageX;
+  CV.mouse.y = e.clientY || e.pageY;
 
   this.onMouseMove();
-  this.trigger(EVENT.ON_MOUSE_MOVE, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_MOVE);
 }
 
 
@@ -404,18 +400,18 @@ var _onTouchEnd = function(e) {
   this.itsSettled = false;
 
   this.onMouseUp();
-  this.trigger(EVENT.ON_MOUSE_UP, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_UP);
 }
 
 var _onMouseUp = function(e) {
 
   e.preventDefault();
 
-  this.mouse.x = e.clientX || e.pageX;
-  this.mouse.y = e.clientY || e.pageY;
+  CV.mouse.x = e.clientX || e.pageX;
+  CV.mouse.y = e.clientY || e.pageY;
 
   this.onMouseUp();
-  this.trigger(EVENT.ON_MOUSE_UP, {mouse: this.mouse});
+  this.trigger(EVENT.ON_MOUSE_UP);
 }
 
 

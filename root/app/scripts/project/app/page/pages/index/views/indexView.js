@@ -1,6 +1,7 @@
 'use strict';
 
 var AbstractPageView      = require('abstract/view/DOM/page/pageView'),
+		CV                    = require('config/currentValues'),
     IndexTpl              = require('index.html');
 
 
@@ -8,7 +9,7 @@ var AbstractPageView      = require('abstract/view/DOM/page/pageView'),
 var IndexView = function (options, datas){
 
   this.idView = 'index';
-  this.id = 'index';
+  this.id     = 'index';
 
   this.template = IndexTpl;
 
@@ -18,5 +19,6 @@ var IndexView = function (options, datas){
 
 _.extend(IndexView, AbstractPageView);
 _.extend(IndexView.prototype, AbstractPageView.prototype);
+
 
 module.exports = IndexView;

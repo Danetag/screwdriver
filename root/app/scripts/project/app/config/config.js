@@ -1,8 +1,6 @@
 'use strict';
 
-var Backbone  = require('backbone'),
-    Tools     = require('tools/tools'),
-    $         = require('jquery');
+var Tools     = require('tools/tools');
 
 
 var Config = function (){

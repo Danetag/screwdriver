@@ -18,24 +18,6 @@ var View = function (options, datas){
   this.TL = {};
 
   /**
-   * Viewport object
-   * @type {Object}
-   */
-  this.viewport = {
-    width: 0,
-    height: 0
-  };
-
-  /**
-   * Mouse object
-   * @type {Object}
-   */
-  this.mouse = {
-    x:0,
-    y:0
-  }
-
-  /**
    * Can update the current view on request animation frame?
    * @type {boolean}
    */
@@ -112,73 +94,47 @@ View.prototype.update = function() {
 
 /**
  * Called on resize
- * @param {object} viewport contains width/height of the browser
  */
-View.prototype.resize = function(viewport) {
-  this.viewport = (viewport != undefined) ? viewport : { width: $(document).width(), height:$(window).height() };
-
-  var scrollHeight = (document.body.scrollHeight) ? document.body.scrollHeight : document.documentElement.scrollHeight;
-  
-  if (scrollHeight > this.viewport.height && !Config.isIE) {
-    // has scrollbar
-    //this.viewport.width -= Config.scrollbarWidth;
-  }
-
+View.prototype.resize = function() {
   this.onResize();
 }
 
 
 /**
  * Called on orientationChange
- * @param {object} viewport contains width/height of the browser
  */
-View.prototype.orientationChange = function(viewport) {
-  this.viewport = (viewport != undefined) ? viewport : { width: $(document).width(), height:$(window).height() };
-
+View.prototype.orientationChange = function() {
   this.onOrientationChange();
 }
 
 /**
  * Called on mouseMove
- * @param {Object} Mouse object with x and y properties
  */
-View.prototype.mouseMove = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
+View.prototype.mouseMove = function() {
   this.onMouseMove();
 }
 
 
 /**
  * Called on mouseDown
- * @param {Object} Mouse object with x and y properties
  */
-View.prototype.mouseDown = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
+View.prototype.mouseDown = function() {
   this.onMouseDown();
 }
 
 
 /**
  * Called on mouseUp
- * @param {Object} Mouse object with x and y properties
  */
-View.prototype.mouseUp = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
+View.prototype.mouseUp = function() {
   this.onMouseUp();
 }
 
 
 /**
  * Called on mouseOut
- * @param {boolean} outWindow is out of the window?
  */
-View.prototype.onMouseOut = function(outWindow) {
+View.prototype.onMouseOut = function() {
   
 }
 
