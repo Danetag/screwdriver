@@ -2,7 +2,7 @@ var express = require('express');
 var routing = require('./core/Routing');
 
 var FrontEndRouting = function() {
-    
+
   routing.call(this);
   
 }
@@ -27,7 +27,15 @@ FrontEndRouting.prototype.initRoutes = function() {
   });
 
   this.addRoute({
-    route: '/:@lang/:@about/',
+    route: '/:@lang/:@index',
+    lang: ':@lang',
+    controller: 'index',
+    action: 'index',
+    frontRouting: false
+  });
+
+  this.addRoute({
+    route: '/:@lang/:@about',
     lang: ':@lang',
     controller: 'about',
     action: 'index'

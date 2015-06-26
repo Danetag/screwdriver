@@ -18,15 +18,17 @@ JsonController.prototype.preAction = function(req, res) {
 JsonController.prototype.routesAction = function(req, res) {
 
   var routes = {};
-  routes.all = {};
-  routes.pages = {};
+
+  //mainpage
+  routes.mainpage = Routes.aLangRoutes.mainpage;
 
   for (var lang in Routes.aLangRoutes) {
 
+    if (lang == "mainpage") continue;
+
     var aLangRoutes = Routes.aLangRoutes[lang];
     
-    routes.all[lang] = {};
-    routes.pages[lang] = {};
+    routes[lang] = {};
 
     for ( var i in aLangRoutes) {
 
@@ -34,15 +36,16 @@ JsonController.prototype.routesAction = function(req, res) {
 
       if (!route.frontRouting) continue;
 
-      routes.all[lang][route.id] = {};
-      routes.all[lang][route.id].id = route.id;
-      routes.all[lang][route.id].route = route.route;
-      routes.all[lang][route.id].label = route.label;
-      routes.all[lang][route.id].datas = route.datas;
+      routes[lang][route.id] = {};
+
+      // Copying properties
+      for (var property in route) {
+        routes[lang][route.id][property] = route[property];
+      }
 
       // Complete the datas
-      routes.all[lang][route.id].datas.lang = lang;
-      routes.all[lang][route.id].datas.base_url = config.frontend.base_url;
+      routes[lang][route.id].datas.lang = lang;
+      routes[lang][route.id].datas.base_url = config.frontend.base_url;
 
       // remove lang from route
       var backboneRoute = route.route.replace('/' + lang + '/', '');
@@ -51,12 +54,12 @@ JsonController.prototype.routesAction = function(req, res) {
       if (backboneRoute[backboneRoute.length - 1] == '/') backboneRoute = backboneRoute.substr(0, backboneRoute.length - 1);
       if (backboneRoute == '/' + lang || backboneRoute == '') continue;
 
-      routes.pages[lang][backboneRoute] = route.id;
     }
 
   }
 
   res.json(routes);
+
 }
 
 

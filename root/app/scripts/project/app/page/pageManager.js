@@ -1,11 +1,11 @@
 'use strict';
 
-var $                   = require('jquery'),
-    Backbone            = require('backbone'),
-    _                   = require('underscore'),
-    EVENT               = require('event/event'),
+var EVENT               = require('event/event'),
+    Config              = require('config/config'),
     IndexPage           = require('page/pages/index/index'),
-    AboutPage           = require('page/pages/about/about');
+    AboutPage           = require('page/pages/about/about'),
+    Analytics           = require('app/tools/analytics');
+
 
 
 
@@ -36,6 +36,7 @@ var PageManager = function (){
    */
   this.pages        = {};
 
+  this.analytics = new Analytics();
 }
 
 
@@ -49,17 +50,16 @@ PageManager.prototype.init = function() {
 
 /*
  * Entry point to change pages
- * @param {string} pageID of the page to navigate to.
- * @param {Object} params of the page to navigate to.
+ * @param {Object} page of the page to navigate to.
  */
-PageManager.prototype.navigateTo = function(pageID, params) {
+PageManager.prototype.navigateTo = function(page) {
 
-  //console.log('PageManager:: navigateTo', pageID, 'currentPage:: ', this.currentPage.id);
-  
+  //console.log('PageManager:: navigateTo', page.id, 'currentPage:: ', this.currentPage.page.id);
+
   // If same page, resend params.
-  if (this.currentPage !== null && this.currentPage.id === pageID) {
-    console.log('same page, resend params if params.')
-    this.currentPage.setParams(params);
+  if (this.currentPage !== null && this.currentPage.id === page.id) {
+    console.log('same page')
+    //this.currentPage.setParams(page.params);
     return;
   }
 
@@ -67,46 +67,50 @@ PageManager.prototype.navigateTo = function(pageID, params) {
   // and the user requests a different page
   if (this.oldPage !== null) {
     
-    if (this.currentPage.id !== pageID) {
-      console.log('BACK !')
-      Backbone.history.history.back();
+    if (this.currentPage.page.id !== page.id) {
+      console.log('BACK !', this.currentPage.page.id, page.id)
+      //Backbone.history.history.back();
     }
 
     return;
   }
 
-  this.setCurrentPage(pageID, params);
+  page.params = (page.params != undefined) ? page.params : {};
+  page.params.hasLoading = true;
+
+  this.setCurrentPage(page);
 
   // Starts here
-  _hideOldPage.call(this);
+  _preHideOldPage.call(this);
   
 }
 
 
 /*
  * Set the current page
- * @param {string} pageID of the page to navigate to.
- * @param {Object} params of the page to navigate to.
+ * @param {Object} page of the page to navigate to.
  */
-PageManager.prototype.setCurrentPage = function(pageID, params) {
+PageManager.prototype.setCurrentPage = function(page) {
 
-  if (this.pages[pageID] == undefined) {
-    console.log('PageManager:: Error: Please create a controller/view for the ' + pageID + 'section, then register the page in the PageManager');
+  if (this.pages[page.id] == undefined) {
+    console.log('PageManager:: Error: Please create a controller/view for the ' + page.id + ' ID, then register the page in the PageManager');
     return;
   }
 
   this.oldPage = this.currentPage;
-  this.currentPage = this.pages[pageID];
-  this.currentPage.init(params);
-}
 
+  if (this.currentPage != null) 
+    _unbindEvents.call(this);
 
-/**
- * Hide the page currently displayed
- * @private
- */
-PageManager.prototype.setOldPage = function(pageID) {
-  this.oldPage = this.pages[pageID];
+  //console.log('NEW CURRENT PAGE', page);
+
+  this.currentPage = new this.pages[page.id]();
+
+  if (!page.params.hasLoading)
+    this.listenTo(this.currentPage, EVENT.CLEAN_CURRENT_CONTENT, _cleanCurrentContent.bind(this));
+  
+  this.currentPage.init(page);
+  
 }
 
 
@@ -117,21 +121,54 @@ PageManager.prototype.setOldPage = function(pageID) {
 var _initPages = function() {
 
   this.pages = {
-    'index': new IndexPage(),
-    'about': new AboutPage()
+    'index': IndexPage,
+    'about': AboutPage
   }
 
 }
 
+var _cleanCurrentContent = function(){
+  this.trigger(EVENT.CLEAN_CURRENT_CONTENT);
+}
+
 /** Transition logic **/
+
+var _preHideOldPage = function() {
+  this.listenToOnce(this.oldPage, EVENT.PRE_HIDDEN, _oldPagePreHidden.bind(this));
+  this.oldPage.preHide();
+}
+
+var _oldPagePreHidden = function() {
+  _hideOldPage.call(this)
+}
+
 
 /**
  * Hide the page currently displayed
  * @private
  */
 var _hideOldPage = function() {
-  this.listenToOnce(this.oldPage.view, EVENT.HIDDEN, _oldPageHidden.bind(this));
-  this.oldPage.view.hide();
+
+  // In case the aoder is firing. At this point, it shouldn;t do anything tho.
+  this.stopListening(this.oldPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
+
+  this.listenToOnce(this.oldPage, EVENT.HIDDEN, _oldPageHidden.bind(this));
+  this.listenToOnce(this.oldPage, EVENT.DISPOSE, _disposePage.bind(this)); // Just in case we want to dispose directly the page
+
+  // Remove here
+  //console.log('-- remove event loader old page + new one to destroy the old view in case', this.oldPage.page);
+
+  this.stopListening(this.oldPage, EVENT.LOADER_SHOWN, _currentPageLoaderShown.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_COMPLETE, _currentPageLoaderComplete.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
+  this.stopListening(this.oldPage, EVENT.INIT, _currentPageViewInit.bind(this));
+
+  this.listenToOnce(this.oldPage, EVENT.LOADER_SHOWN, _disposePage.bind(this));
+  this.listenToOnce(this.oldPage, EVENT.LOADER_COMPLETE, _disposePage.bind(this));
+  this.listenToOnce(this.oldPage, EVENT.LOADER_HIDDEN, _disposePage.bind(this));
+  this.listenToOnce(this.oldPage, EVENT.INIT, _disposePage.bind(this));
+
+  this.oldPage.hide(this.currentPage.page);
 }
 
 
@@ -151,7 +188,9 @@ var _oldPageHidden = function() {
  */
 var _loadCurrentPage = function() {
 
-  if (!this.currentPage.isLoaded) {
+  //console.log('PageManager::_loadCurrentPage', this.currentPage.page);
+
+  if (!this.currentPage.isLoaded()) {
     this.listenToOnce(this.currentPage, EVENT.LOADER_SHOWN, _currentPageLoaderShown.bind(this));
     this.listenToOnce(this.currentPage, EVENT.LOADER_COMPLETE, _currentPageLoaderComplete.bind(this));
 
@@ -168,7 +207,26 @@ var _loadCurrentPage = function() {
  * @private
  */
 var _currentPageLoaderShown = function() {
-  this.oldPage.dispose();
+  //_disposePage.call(this);
+}
+
+var _disposePage = function() {
+
+  if (this.oldPage == null) return;
+
+  //kill old listener in case it's still here
+  this.stopListening(this.oldPage, EVENT.DISPOSE, _disposePage.bind(this)); 
+  this.stopListening(this.oldPage, EVENT.HIDDEN, _oldPageHidden.bind(this));
+
+  this.stopListening(this.oldPage, EVENT.LOADER_SHOWN, _disposePage.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_COMPLETE, _disposePage.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_HIDDEN, _disposePage.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
+  this.stopListening(this.oldPage, EVENT.INIT, _disposePage.bind(this));
+
+  this.oldPage.dispose(this.currentPage.page);
+
+  this.oldPage = null;
 }
 
 /**
@@ -176,8 +234,35 @@ var _currentPageLoaderShown = function() {
  * @private
  */
 var _currentPageLoaderComplete = function() {
-  this.listenToOnce(this.currentPage.view, EVENT.INIT, _currentPageViewInit.bind(this));
+
+  if (this.oldPage == null) {
+    _oldPagePostHidden.call(this)
+  } else {
+    this.listenToOnce(this.oldPage, EVENT.POST_HIDDEN, _oldPagePostHidden.bind(this));
+    this.oldPage.postHide();
+  }
+
+}
+
+var _oldPagePostHidden = function() {
+  _disposePage.call(this);
+
+ // console.log('_currentPageLoaderComplete', this.currentPage.page);
+  this.listenToOnce(this.currentPage, EVENT.INIT, _currentPageViewInit.bind(this));
+  this.initCurrentView();
+}
+
+PageManager.prototype.initCurrentView = function() {
+
+  //update title
+  if (this.currentPage.getMetas() != undefined)
+    document.title = this.currentPage.getMetas().title;
+
+  this.currentPage.instanceView();
+  _bindEvents.call(this);
+
   this.currentPage.initView();
+
 }
 
 /**
@@ -186,9 +271,11 @@ var _currentPageLoaderComplete = function() {
  */
 var _currentPageViewInit = function() {
 
-  if (!this.currentPage.isLoaded) {
+  if (this.currentPage.loader != null) {
     this.listenToOnce(this.currentPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
-    this.currentPage.loader.loaderView.hide();
+
+    this.currentPage.hideLoader();
+
   } else {
     _currentPageLoaderHidden.call(this);
   }
@@ -201,10 +288,11 @@ var _currentPageViewInit = function() {
  * @private
  */
 var _currentPageLoaderHidden = function() {
-  this.listenToOnce(this.currentPage.view, EVENT.SHOWN, _currentPageViewShown.bind(this));
+
+  this.listenToOnce(this.currentPage, EVENT.SHOWN, _currentPageViewShown.bind(this));
 
   this.currentPage.disposeLoader();
-  this.currentPage.view.show();
+  this.currentPage.show();
 }
 
 /**
@@ -212,8 +300,42 @@ var _currentPageLoaderHidden = function() {
  * @private
  */
 var _currentPageViewShown = function() {
-  this.oldPage = null;
+
+  if (this.currentPage.page.id != "index")
+    Config.mainView.showSubviews();
 }
 
+
+/**
+ * Binding current view Event
+ * @private
+ */
+var _bindEvents = function() {
+  this.listenTo(this.currentPage.view, EVENT.ON_PLAY, $.proxy(_onPlay, this));
+  this.listenTo(this.currentPage.view, EVENT.ON_STOP, $.proxy(_onStop, this));
+}
+
+
+/**
+ * Unbinding current view Event
+ * @private
+ */
+var _unbindEvents = function() {
+  this.stopListening(this.currentPage.view, EVENT.ON_PLAY, $.proxy(_onPlay, this));
+  this.stopListening(this.currentPage.view, EVENT.ON_STOP, $.proxy(_onStop, this));
+}
+
+
+/**
+ * On Play
+ * @private
+ */
+var _onPlay = function(e){
+  this.trigger(EVENT.ON_PLAY, e);
+}
+
+var _onStop = function(e){
+  this.trigger(EVENT.ON_STOP, e);
+}
 
 module.exports = PageManager;

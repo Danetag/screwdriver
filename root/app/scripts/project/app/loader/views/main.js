@@ -1,30 +1,25 @@
 'use strict';
 
-var $         					= require('jquery'),
-    AbstractLoaderView  = require('abstract/view/DOM/loader/loaderView'),
-    Backbone  					= require('backbone'),
+var AbstractLoaderView  = require('abstract/view/DOM/loader/loaderView'),
     EVENT               = require('event/event'),
-    dot                 = require('dot'),
-    _                   = require('underscore'),
     LoaderMainTpl       = require('loader/main.html');
 
-var LoaderViewMain = AbstractLoaderView.extend(new function (){
+var LoaderViewMain = function (options, datas){
+
+  this.idView = "loaderMain";
 
   /*
-   * Template of a basic loader
-   * @type {dot.template}
+   * override
    */
-  this.template = dot.template(LoaderMainTpl);
-
-  /*
-   * Percent DOM Element
-   * @type {$}
-   */
-  this.$pct = null;
-
-});
+  this.template = LoaderMainTpl;
 
 
+  AbstractLoaderView.call(this, options, datas);
+
+};
+
+_.extend(LoaderViewMain, AbstractLoaderView);
+_.extend(LoaderViewMain.prototype, AbstractLoaderView.prototype);
 
 LoaderViewMain.prototype.initDOM = function() {
   this.$pct = this.$el.find('.pct');
@@ -33,22 +28,18 @@ LoaderViewMain.prototype.initDOM = function() {
 LoaderViewMain.prototype.setPct = function(pct) {
   this.pct = pct;
   this.$pct.html(this.pct + "%");
+
+  if (pct == 100) {
+    this.trigger(EVENT.COMPLETE);
+  }
 }
 
 LoaderViewMain.prototype.show = function() {
-  TweenLite.to( this.$el, 0.7, { autoAlpha:1 , ease:Cubic.easeOut , onComplete:_shown.bind(this)});
+  TweenLite.to( this.$el, 0.3, { autoAlpha:1 , ease:Cubic.easeOut , onComplete:this.onShown.bind(this)});
 }
 
 LoaderViewMain.prototype.hide = function() {
-  TweenLite.to( this.$el, 0.7, { autoAlpha:0 , ease:Cubic.easeOut , onComplete:_hidden.bind(this)});
-}
-
-var _shown = function() {
-  AbstractLoaderView.prototype.show.call(this);
-}
-
-var _hidden = function() {
-  AbstractLoaderView.prototype.hide.call(this);
+  TweenLite.to( this.$el, 0.3, { autoAlpha:0 , ease:Cubic.easeOut , onComplete:this.onHidden.bind(this)});
 }
 
 

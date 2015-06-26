@@ -1,10 +1,8 @@
 'use strict';
 
-var $                   = require('jquery'),
-    AbstractDOMView     = require('abstract/view/DOM/DOMView'),
-    Backbone            = require('backbone'),
-    dot                 = require('dot'),
-    _                   = require('underscore'),
+
+var AbstractDOMView     = require('abstract/view/DOM/DOMView'),
+    EVENT               = require('event/event'),
     Config              = require('config/config');
 
 
@@ -14,7 +12,9 @@ var $                   = require('jquery'),
  * @extend {abstract/view/DOM/DOMView}
  * @constructor
  */
-var LoaderView = AbstractDOMView.extend(new function (){
+var LoaderView = function (options, datas){
+
+    this.idView = (this.idView != undefined) ? this.idView : 'loader';
 
     /**
      * Percent loading of the current Loader
@@ -29,8 +29,14 @@ var LoaderView = AbstractDOMView.extend(new function (){
      */
     this.$loaderContainer = null;
 
-});
 
+    AbstractDOMView.call(this, options, datas);
+
+
+};
+
+_.extend(LoaderView, AbstractDOMView);
+_.extend(LoaderView.prototype, AbstractDOMView.prototype);
 
 
 /**
@@ -38,6 +44,10 @@ var LoaderView = AbstractDOMView.extend(new function (){
  */
 LoaderView.prototype.setPct = function(pct) {
     this.pct = pct;
+
+    if(this.pct == 100) {
+        this.trigger(EVENT.COMPLETE);
+    }
 }
 
 
@@ -46,6 +56,16 @@ LoaderView.prototype.setPct = function(pct) {
  */
 LoaderView.prototype.defineContainer = function($el) {
     this.$container = ($el != undefined) ? $el : $('body');
+}
+
+/**
+ * @override
+ */
+LoaderView.prototype.dispose = function() {
+
+    this.$loaderContainer = null;
+    
+    AbstractDOMView.prototype.dispose.call(this);
 }
 
 

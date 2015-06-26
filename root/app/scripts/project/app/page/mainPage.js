@@ -1,15 +1,13 @@
 'use strict';
 
-var $                     = require('jquery'),
-    Backbone              = require('backbone'),
-    MainView              = require('page/main/views/mainView'),
+var MainView              = require('page/main/views/mainView'),
     Loader                = require('loader/loader'),
     LoaderViewMain        = require('loader/views/main'),
+    Config                = require('config/config'),
     EVENT                 = require('event/event'),
+    Router                = require('router/router'),
     AbstractController    = require('abstract/controller/controller'),
-    _                     = require('underscore'),
     tools                 = require('tools/tools'),
-    DatasManager          = require('datas/datasManager'),
     PageManager           = require('page/pageManager');
 
 
@@ -35,7 +33,9 @@ var MainPage = function (){
    */
   this.firstTime = true;
 
-  this.id = 'mainpage';
+
+  this.currentAssets = [];
+  this.currentDatas = [];
 
 }
 
@@ -49,10 +49,18 @@ _.extend(MainPage.prototype, AbstractController.prototype);
  */
 MainPage.prototype.init = function() {
 
-  AbstractController.prototype.init.call(this);
-
   this.pageManager = new PageManager();
   this.pageManager.init();
+
+  _bindPageManagerEvents.call(this);
+
+  this.instanceView();
+
+  var mainPage = Config.getPage({id:"mainpage"});
+  AbstractController.prototype.init.call(this, mainPage);
+  
+  this.listenTo(this.pageManager, EVENT.CLEAN_CURRENT_CONTENT, this.cleanCurrentContent.bind(this));
+
 }
 
 
@@ -60,9 +68,16 @@ MainPage.prototype.init = function() {
  * @override
  */
 MainPage.prototype.instanceView = function() {
-  this.view = new MainView({isViewContainer: true});
-}
 
+  this.view = Config.mainView = new MainView({isViewContainer: true});
+
+  // Bind the main events now
+  this.view.bindMainEvents();
+  _bindMainEvents.call(this);
+
+  this.view.noContent();
+
+}
 
 /*
  * @override
@@ -70,6 +85,8 @@ MainPage.prototype.instanceView = function() {
 MainPage.prototype.initLoader = function() {
   this.loader = new Loader();
   this.loader.init(new LoaderViewMain());
+
+  _onResize.call(this);
 }
 
 
@@ -78,67 +95,92 @@ MainPage.prototype.initLoader = function() {
  */
 MainPage.prototype.initAssets = function() {
 
-  var mainAsset     = this.view.configView.assets;
-  var currentAssets = this.pageManager.currentPage.view.configView.assets;
+  var mainAsset      = this.page.assets;
+  this.currentAssets = this.pageManager.currentPage.initAssets();
 
-  //Add prefix if id
-  for (var i in mainAsset) {
-    var asset = mainAsset[i];
+  this.loader.addItems(_.union(mainAsset, this.currentAssets));
+}
 
-    if (asset.id != undefined) {
-      asset.id = this.id + "_" + asset.id;
-    }
+/**
+ * @override
+ */
+MainPage.prototype.initDatas = function() {
+
+  this.currentDatas = this.pageManager.currentPage.initDatas();
+
+  if (this.currentDatas != null) {
+    this.loader.addItems(this.currentDatas);
   }
-
-  for (var i in currentAssets) {
-    var asset = currentAssets[i];
-
-    if (asset.id != undefined) {
-      asset.id = this.pageManager.currentPage + "_" + asset.id;
-    }
-  }
-
-  this.loader.addItems(_.union(mainAsset, currentAssets));
+    
 }
 
 
 /*
  * Navigate to a page. Basically called form the router.
  */
-MainPage.prototype.navigateTo = function(pageID, parameters) {
-
-  var params = parameters || {};
+MainPage.prototype.navigateTo = function(page) {
 
   if (!this.firstTime) {
-    this.pageManager.navigateTo(pageID, params);
+    this.pageManager.navigateTo(page);
   } else {
 
     this.firstTime = false;
 
+    if (page == null || page == undefined) {
+      console.log("The page wasn't found in the Config.getPage() function");
+      return;
+    }
+
+    page.params = (page.params != undefined) ? page.params : {};
+
     //no loading for the current Page, the main Page takes care of it
-    params.hasLoading = false;
+    page.params.hasLoading = false;
 
-    this.pageManager.setCurrentPage(pageID, params);
-
-    this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this))
+    this.pageManager.setCurrentPage(page);
 
     this.load();
-
+    
   }
 }
+
+
+MainPage.prototype.cleanCurrentContent = function() {
+  this.view.cleanCurrentContent();
+}
+
 
 
 /*
  * On loading is complete
  * @private
  */
-var _loaderComplete = function() {
-  this.listenToOnce(this.pageManager.currentPage.view, EVENT.INIT, _currentPageViewInit.bind(this));
+MainPage.prototype.loaderComplete = function() {
 
-  this.pageManager.currentPage.isLoaded = true;
+  console.log('MainPage.prototype.loaderComplete');
 
+  // Give the datas + assets of the current page to the current page
+  this.pageManager.currentPage.getCurrentDatas(this.currentDatas, this.loader);
+  this.pageManager.currentPage.getCurrentAssets(undefined, this.loader);
+
+  // This page is loaded now.
+  this.pageManager.currentPage.setIsLoaded(true);
+
+  // console.log("mainpage page", this.page)
+
+  // Init Main View
+  this.listenToOnce(this.view, EVENT.INIT, _mainPageViewInit.bind(this));
   this.initView();
-  this.pageManager.currentPage.initView();
+  
+}
+
+
+/*
+ * On main page view is init
+ * @private
+ */
+var _mainPageViewInit = function() {
+  this.listenToOnce(this.pageManager.currentPage, EVENT.INIT, _currentPageViewInit.bind(this));
+  this.pageManager.initCurrentView();
 }
 
 
@@ -148,12 +190,6 @@ var _loaderComplete = function() {
  */
 var _currentPageViewInit = function() {
   this.listenToOnce(this.loader.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
-
-  // Bind event + Resize here to place all the elements
-  _bindEvents.call(this);
-  _onResize.call(this);
-  _onOrientationChange.call(this);
-
   this.loader.loaderView.hide();
 }
 
@@ -173,8 +209,8 @@ var _loaderHidden = function() {
  * @private
  */
 var _mainViewShown = function() {
-  this.listenToOnce(this.pageManager.currentPage.view, EVENT.SHOWN, _currentPageViewShown.bind(this));
-  this.pageManager.currentPage.view.show();
+  this.listenToOnce(this.pageManager.currentPage, EVENT.SHOWN, _currentPageViewShown.bind(this));
+  this.pageManager.currentPage.show();
 }
 
 
@@ -183,33 +219,62 @@ var _mainViewShown = function() {
  * @private
  */
 var _currentPageViewShown = function() {
+  
   this.loader.dispose();
   this.loader = null;
-  
-  // We are happy.
+
+  this.pageManager.currentPage.page.params.hasLoading = true;
+
+  this.view.showSubviews();
+
+  this.currentAssets.length = 0;
+  this.currentAssets = null;
+
+  this.currentDatas.length = 0;
+  this.currentDatas = null;
+
+  this.assets = null;
+  this.datas = null;
 }
+
+
 
 /* Events */
 
 
 /*
- * Bind events, all trigerred from the main view
+ * Bind main events, all trigerred from the main view
  * @private
  */
-var _bindEvents = function() {
+var _bindMainEvents = function() {
   this.listenTo(this.view, EVENT.ON_ORIENTATION_CHANGE, $.proxy(_onOrientationChange, this));
   this.listenTo(this.view, EVENT.ON_RESIZE, $.proxy(_onResize, this));
   this.listenTo(this.view, EVENT.ON_RAF, $.proxy(_onRAF, this));
   this.listenTo(this.view, EVENT.ON_MOUSE_OUT, $.proxy(_onMouseOut, this));
+  this.listenTo(this.view, EVENT.ON_MOUSE_MOVE, $.proxy(_onMouseMove, this));
+  this.listenTo(this.view, EVENT.ON_MOUSE_DOWN, $.proxy(_onMouseDown, this));
+  this.listenTo(this.view, EVENT.ON_MOUSE_UP, $.proxy(_onMouseUp, this));
+  this.listenTo(this.view, EVENT.ON_SCROLL, $.proxy(_onScroll, this));
+  this.listenTo(this.view, EVENT.ON_PLAY, $.proxy(_onPlay, this));
+  this.listenTo(this.view, EVENT.ON_STOP, $.proxy(_onStop, this));
 }
 
+
+/*
+ * Bind apge Manager events, all trigerred from the main view
+ * @private
+ */
+var _bindPageManagerEvents = function() {
+  this.listenTo(this.pageManager, EVENT.ON_PLAY, $.proxy(_onPlay, this));
+  this.listenTo(this.pageManager, EVENT.ON_STOP, $.proxy(_onStop, this));
+}
 
 /*
  * On orientation change
  * @private
  */
 var _onOrientationChange = function(e) {
-  var viewport = e || undefined;
+  var viewport = (e != undefined) ? e.viewport : undefined;
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
     this.pageManager.currentPage.view.orientationChange(viewport);
   }
@@ -221,20 +286,46 @@ var _onOrientationChange = function(e) {
  * @private
  */
 var _onResize = function(e) { 
-  var viewport = e || undefined;
+  var viewport = (e != undefined) ? e.viewport : undefined;
+  
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
     this.pageManager.currentPage.view.resize(viewport);
   }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.resize(viewport);
+  }
+
+  // Current Loader
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.loader != null && this.pageManager.currentPage.loader.loaderView != null) {
+    this.pageManager.currentPage.loader.loaderView.resize(viewport);
+  }
+
 }
 
+
+var _onScroll = function() {
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.onScroll();
+  }
+
+}
 
 /*
  * On request animation frame
  * @private
  */
 var _onRAF = function(e) { 
+
   if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
     this.pageManager.currentPage.view.update();
+  }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.update();
   }
 }
 
@@ -244,10 +335,87 @@ var _onRAF = function(e) {
  * @private
  */
 var _onMouseOut = function(e) {
-  if (this.pageManager.currentPage !== null) {
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
     this.pageManager.currentPage.view.onMouseOut(e.outWindow);
+  }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.onMouseOut(e.outWindow);
   }
 }
 
 
+/*
+ * On mouse Move
+ * @private
+ */
+var _onMouseMove = function(e) {
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.mouseMove(e.mouse);
+  }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.mouseMove(e.mouse);
+  }
+}
+
+
+/*
+ * On mouse Down
+ * @private
+ */
+var _onMouseDown = function(e) {
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.mouseDown(e.mouse);
+  }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.mouseDown(e.mouse);
+  }
+}
+
+
+/*
+ * On mouse Up
+ * @private
+ */
+var _onMouseUp = function(e) {
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.mouseUp(e.mouse);
+  }
+
+  // Main Loader
+  if (this.loader != null && this.loader.loaderView != null) {
+    this.loader.loaderView.mouseUp(e.mouse);
+  }
+}
+
+
+var _onPlay = function(e) {
+
+  this.view.stopAllMedia(e.mediaID);
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.stopAllMedia(e.mediaID);
+  }
+}
+
+var _onStop = function(e) {
+
+  this.view.resumeLastMediaPlaying(e.mediaID);
+
+  if (this.pageManager.currentPage !== null && this.pageManager.currentPage.view != null) {
+    this.pageManager.currentPage.view.resumeLastMediaPlaying(e.mediaID);
+  }
+  
+}
+
+
 module.exports = MainPage;
+

@@ -1,19 +1,16 @@
 'use strict';
 
-var $         					= require('jquery'),
-    AbstractLoaderView  = require('abstract/view/DOM/loader/loaderView'),
-    Backbone  					= require('backbone'),
+var AbstractLoaderView  = require('abstract/view/DOM/loader/loaderView'),
     EVENT               = require('event/event'),
-    dot                 = require('dot'),
     LoaderBasicTpl      = require('loader/basic.html');
 
-var LoaderViewBasic = AbstractLoaderView.extend(new function (){
+var LoaderViewBasic = function (options, datas){
 
   /*
    * Template of a basic loader
-   * @type {dot.template}
+   * @type {mustache.template}
    */
-  this.template = dot.template(LoaderBasicTpl);
+  this.template = LoaderBasicTpl;
 
   /*
    * So you can hide when the 100% has been reached
@@ -22,7 +19,12 @@ var LoaderViewBasic = AbstractLoaderView.extend(new function (){
   this.canHide = false;
 
 
-});
+  AbstractLoaderView.call(this, options, datas);
+  
+};
+
+_.extend(LoaderViewBasic, AbstractLoaderView);
+_.extend(LoaderViewBasic.prototype, AbstractLoaderView.prototype);
 
 
 LoaderViewBasic.prototype.initDOM = function() {
@@ -32,40 +34,31 @@ LoaderViewBasic.prototype.initDOM = function() {
 
 LoaderViewBasic.prototype.setPct = function(pct) {
   this.pct = pct;
-
-  TweenLite.to(this.$bar, 0.7, { x:(-100 + this.pct)+'%', ease:Cubic.easeOut, onComplete:_checkEnd.bind(this)});
+  TweenLite.to(this.$bar, 0.5, { x:this.pct+'%', ease:Cubic.easeOut, onComplete:_checkEnd.bind(this)});
 }
 
 LoaderViewBasic.prototype.show = function() {
-  TweenLite.to( this.$el, 0.3, { autoAlpha:1 , ease:Cubic.easeOut , onComplete:_shown.bind(this)});
+  TweenLite.to( this.$el, 0.3, { autoAlpha:1 , ease:Cubic.easeOut, onComplete:this.onShown.bind(this)});
 }
 
 LoaderViewBasic.prototype.hide = function() {
-  if (this.canHide) _hide.call(this);
-  this.canHide = true;
-}
-
-
-var _hide = function() {
   setTimeout($.proxy(function(){
-    TweenLite.to( this.$el, 0.3, { autoAlpha:0 , ease:Cubic.easeOut , onComplete:_hidden.bind(this)});
+    TweenLite.to( this.$el, 0.3, { autoAlpha:0 , ease:Cubic.easeOut , onComplete:this.onHidden.bind(this)});
   }, this), 0);
+
 }
+
 
 var _checkEnd = function() {
+
   if(this.pct === 100) {
-    if (this.canHide) _hide.call(this);
-    this.canHide = true;
+
+    this.trigger(EVENT.COMPLETE);
+    
   }
+
 }
 
-var _shown = function() {
-  AbstractLoaderView.prototype.show.call(this);
-}
-
-var _hidden = function() {
-  AbstractLoaderView.prototype.hide.call(this);
-}
 
 
 

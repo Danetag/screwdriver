@@ -1,26 +1,28 @@
 'use strict';
 
-var $                 = require('jquery'),
-    EVENT             = require('event/event'),
+var EVENT             = require('event/event'),
     AbstractDOMView   = require('abstract/view/DOM/DOMView'),
-    _                 = require('underscore'),
-    Backbone          = require('backbone');
-
-
+    Config            = require('config/config');
 
 /**
  * PageView: Defines a main logic for each page view
  * @extend {abstract/view/DOM/DOMView}
  * @constructor
  */
-var PageView = AbstractDOMView.extend(new function (){});
+var PageView = function (options, datas){
 
+  AbstractDOMView.call(this, options, datas);
 
+};
+
+_.extend(PageView, AbstractDOMView);
+_.extend(PageView.prototype, AbstractDOMView.prototype);
 
 /**
  * @override
  */
 PageView.prototype.initDOM = function() {
+
   TweenLite.set(this.$el, {autoAlpha:0});
 }
 
@@ -28,34 +30,44 @@ PageView.prototype.initDOM = function() {
 /**
  * @override
  */
+
 PageView.prototype.show = function() {
-  TweenLite.to(this.$el, 0.5, { autoAlpha:1, ease:Power2.easeInOut, onComplete:_onShown.bind(this)});
+  
+	if(this.isShown) return;
+
+  setTimeout($.proxy(function(){
+
+    TweenLite.killTweensOf(this.$el);
+
+    TweenLite.to(this.$el, 0.5, { 
+      autoAlpha:1, 
+      ease:Power2.easeInOut, 
+      onComplete:this.onShown.bind(this)
+    });
+
+
+  },this), 0);
+  
 }
 
+
+PageView.prototype.directShow = function() {
+  TweenLite.set(this.$el, {autoAlpha:1});
+  this.onShown();
+}
 
 /**
  * @override
  */
 PageView.prototype.hide = function() {
-  TweenLite.to(this.$el, 0.5, { autoAlpha:0, ease:Power2.easeInOut, onComplete:_onHidden.bind(this)});
+  TweenLite.killTweensOf(this.$el);
+  TweenLite.to(this.$el, 0.5, { autoAlpha:0, ease:Power2.easeInOut, onComplete:this.onHidden.bind(this)});
 }
 
 
-/**
- * Triggered on shown
- * @private
- */
-var _onShown = function() {
-  AbstractDOMView.prototype.show.call(this);
-}
-
-
-/**
- * Triggered on hidden
- * @private
- */
-var _onHidden = function() {
-  AbstractDOMView.prototype.hide.call(this);
+PageView.prototype.directHide = function() {
+  TweenLite.set(this.$el, {autoAlpha:0});
+  this.onHidden();
 }
 
 

@@ -1,10 +1,7 @@
 'use strict';
 
-var Backbone        = require('backbone'),
-    $               = require('jquery'),
-    EVENT           = require('event/event'),
+var EVENT           = require('event/event'),
     Config          = require('config/config'),
-    _               = require('underscore'),
     LoaderViewBasic = require('loader/views/basic');
 
 var Loader = function (){
@@ -38,6 +35,13 @@ Loader.prototype.init = function(loaderView) {
 
   this.items = []; 
   this.queue  = new createjs.LoadQueue(true);
+  
+  if ( Detectizr.device.type == "desktop" && 
+       Detectizr.browser.name != 'ie'
+      ) {
+    // install ONLY on desktop and NOT IE.
+    this.queue.installPlugin(createjs.Sound);
+  }
 
   this.bindEvents();
 
@@ -55,22 +59,33 @@ Loader.prototype.bindEvents = function () {
 }
 
 Loader.prototype.unbindEvents = function () {
+  
+  this.stopListening(this.loaderView, EVENT.SHOWN, _loaderShown.bind(this));
+  this.stopListening(this.loaderView, EVENT.COMPLETE, _loaderViewComplete.bind(this));
+  this.stopListening(this.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
+
   this.queue.removeAllEventListeners();
 }
 
-Loader.prototype.addItem = function(item) {
+Loader.prototype.addItem = function(item_) {
 
   var baseUrl = Config.baseUrl;
+  
+  var item = {};
+  item.src = item_.src;
+  item.id = item_.id;
+  item.type = item_.type;
 
   // Has a retina version provided and it's a retina screen ?
-  if (Config.isHighRes && item.src2x != undefined) {
-    item.src = item.src2x;
+  if (Config.isHighRes && item_.src2x != undefined) {
+    item.src = item_.src2x;
   }
 
+  // this isn't necessary. because everything is off of the root.
   // Add base URL if nothing is specified
-  if (item.src.indexOf("http://") < 0 && item.src.indexOf("https://") < 0) {
-    item.src = baseUrl + item.src;
-  }
+  //if (item_.src.indexOf("http://") < 0 && item_.src.indexOf("https://") < 0) {
+  // item.src = baseUrl + item_.src;
+  //}
 
   this.items.push(item);
 }
@@ -98,12 +113,24 @@ Loader.prototype.getItem = function(key) {
 
 Loader.prototype.start = function() { 
   this.listenToOnce(this.loaderView, EVENT.SHOWN, _loaderShown.bind(this));
-  this.listenToOnce(this.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
+  this.listenToOnce(this.loaderView, EVENT.COMPLETE, _loaderViewComplete.bind(this));
   this.loaderView.show();
 }
 
+Loader.prototype.hide = function() {
+  this.listenToOnce(this.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
+  this.loaderView.hide();
+}
+
+var _loaderHidden = function() {
+  this.trigger(EVENT.HIDDEN);
+}
+
 Loader.prototype.dispose = function() {
+
   this.unbindEvents();
+
+  this.queue.removeAll();
   this.queue = null;
 
   this.items.length = 0;
@@ -146,10 +173,17 @@ var _onError = function(e) {
 
 var _onProgress = function(e) {
   //e.progress
-  this.loaderView.setPct(Math.round(e.progress * 100));
+  var pct = Math.round(e.progress * 100);
+
+  if (pct < 100)
+    this.loaderView.setPct(pct);
 }
 
 var _onComplete = function(){
+  this.loaderView.setPct(100);
+}
+
+var _loaderViewComplete = function() {
   this.trigger(EVENT.COMPLETE, {loader:this});
 }
 
@@ -160,7 +194,6 @@ var _loaderShown = function(e) {
   this.trigger(EVENT.SHOWN);
 
   if (!this.items.length) {
-    this.loaderView.setPct(100);
     _onComplete.call(this);
     return;
   } 
@@ -169,9 +202,7 @@ var _loaderShown = function(e) {
   this.queue.loadManifest(this.items);
 }
 
-var _loaderHidden = function() {
-  this.trigger(EVENT.HIDDEN);
-}
+
 
 
 

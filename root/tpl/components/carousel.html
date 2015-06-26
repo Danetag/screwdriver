@@ -1,0 +1,23 @@
+<div class="carousel">
+
+	<button class="icon-close">
+		<span class="label">close</span>
+		<span class="line left">&nbsp;</span>
+		<span class="line right">&nbsp;</span>
+	</button>
+
+	<div class="table">
+		<div class="table-cell">
+
+			<div class="carousel-container">
+				<ul>
+					{{ for(var item in it.page.items) { }}<!--
+					--><li><img src="{{=item.src}}" /></li><!--
+				-->{{ } }}
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+</div>

@@ -1,7 +1,6 @@
 'use strict';
 
-var $        = require('jquery'),
-    App      = require('app/app');
+var App      = require('app/app');
 
 
 

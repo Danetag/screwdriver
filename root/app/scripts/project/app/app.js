@@ -1,13 +1,9 @@
 'use strict';
 
-var $               = require('jquery'),
-    Backbone        = require('backbone'),
-    Config          = require('config/config'),
+var Config          = require('config/config'),
     Loader          = require('loader/loader'),
     EVENT           = require('event/event'),
-    DatasManager    = require('datas/datasManager'),
     LoaderViewEmpty = require('loader/views/empty'),
-    _               = require('underscore'),
     Router          = require('router/router');
 
 Backbone.$ = $;
@@ -57,7 +53,6 @@ var _loadJsonConfig = function() {
 
   this.listenToOnce(this.loader, EVENT.COMPLETE, _loaderComplete.bind(this));
 
-  this.loader.addItem({ src: "/static/config/config.json" , id:"config" })
   this.loader.addItem({ src: "/routes.json" , id:"routes" })
 
   this.loader.start();
@@ -71,14 +66,13 @@ var _loadJsonConfig = function() {
  */
 var _loaderComplete = function(e) {
 
-  Config.pages = this.loader.getItem('config').result;
-  var routes = this.loader.getItem('routes').result;
+  Config.pages = this.loader.getItem('routes').result;
 
   this.loader.dispose();
   this.loader = null;
 
-  Router.init(routes.pages);
-  DatasManager.init(routes.all);
+  Config.init();
+  Router.init();
 
   Backbone.history.start({
     pushState: true,

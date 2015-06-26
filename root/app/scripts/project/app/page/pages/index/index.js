@@ -1,21 +1,12 @@
 'use strict';
 
-var $                     = require('jquery'),
-    _                     = require('underscore'),
-    AbstractController    = require('abstract/controller/controller'),
-    Loader                = require('loader/loader'),
-    LoaderViewEmpty       = require('loader/views/empty'),
-    IndexView             = require('page/pages/index/views/indexView'),
-    Backbone              = require('backbone');
+var AbstractController    = require('abstract/controller/controller'),
+    IndexView             = require('page/pages/index/views/indexView');
 
 
 
 var IndexPage = function (){
-
   AbstractController.call(this);
-
-  this.id = 'index';
-
 }
 
 _.extend(IndexPage, AbstractController);
@@ -27,7 +18,8 @@ _.extend(IndexPage.prototype, AbstractController.prototype);
  * @overrided
  */
 IndexPage.prototype.instanceView = function() {
-  this.view = new IndexView();
+	AbstractController.prototype.instanceView.call(this);
+  this.view = new IndexView({}, this.datas);
 }
 
 

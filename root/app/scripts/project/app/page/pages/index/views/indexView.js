@@ -1,22 +1,22 @@
 'use strict';
 
-var $                     = require('jquery'),
-    AbstractPageView      = require('abstract/view/DOM/page/pageView'),
-    IndexTpl              = require('index.html'),
-    dot                   = require('dot'),
-    _                     = require('underscore'),
-    Backbone              = require('backbone');
+var AbstractPageView      = require('abstract/view/DOM/page/pageView'),
+    IndexTpl              = require('index.html');
 
 
 
-var IndexView = AbstractPageView.extend(new function (){
+var IndexView = function (options, datas){
 
   this.idView = 'index';
   this.id = 'index';
 
-  this.template = dot.template(IndexTpl);
+  this.template = IndexTpl;
 
-});
+  AbstractPageView.call(this, options, datas);
 
+};
+
+_.extend(IndexView, AbstractPageView);
+_.extend(IndexView.prototype, AbstractPageView.prototype);
 
 module.exports = IndexView;

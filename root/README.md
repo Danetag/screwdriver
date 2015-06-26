@@ -4,8 +4,10 @@
 > <%= description %>
 
 ## Features
-- Stylus + Autoprofixer + Nib + Source Mapping
+- Stylus + Autoprofixer + Source Mapping
 - Livereload
+- Webp
+- Icon-font
 - Server NodeJS (Express)
 - Dot.js (templating) for both server and client side.
 - Browserify + Backbone + Source Mapping

@@ -11,28 +11,59 @@ body {
 	font-size: 100%;
 	margin: 0;
 	
-	&.init {
+ 	&.show {
+
+ 		background-color:#FFF;
 		
-	    #content,
-	    #menu,
-	    h1 {
-	      display: block;
-	    }
+    #content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+ 	}
+
+ 	&.show-subviews {
+		
+    #menu,
+    h1 {
+      opacity: 1;
+      visibility: visible;
+    }
+
+ 	} 
+
+ 	&.no-scroll {
+
+ 		#content {
+ 			overflow:hidden;
+ 		}
 
  	}
 
 }
 
-.has-js body {
-	background-color:#000;
-	
-	&.init {
-		background-color:#FFF;
-	}
+#content,
+#menu,
+h1{
+  transition: all 300ms cubic-ease-out;
+  opacity: 0;
+  visibility: hidden;
 }
 
-.has-js #content,
-.has-js #menu,
-.has-js h1{
-  display: none;
+#content {
+
+	@extend .full-size;
+	z-index: 5;
+
+	& > div,
+	& > section {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+ 	&.no-content {
+ 		overflow:hidden;
+ 	}
+
+
 }

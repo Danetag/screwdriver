@@ -1,7 +1,6 @@
 'use strict';
 
-var Backbone   = require('backbone'),
-    Config     = require('config/config'),
+var Config     = require('config/config'),
     MainPage   = require('page/mainPage');
     
 
@@ -17,17 +16,14 @@ var Router = Backbone.Router.extend(new function (){
    * @type {Object}
    */
   this.routes = {
+
     ":lang": "default",
     ":lang/": "default",
-    ":lang/:page": "default",
-    ":lang/:page/": "default"
+
+    ":lang/:slug": "default",
+    ":lang/:slug/": "default"
   };
 
-  /**
-   * Routes defined on server side
-   * @type {Object}
-   */
-  this.routesServer = null;
 
   /**
    * Instance of mainPage
@@ -50,8 +46,7 @@ Router.prototype.initialize = function(){
 /*
  * Handles the init
  */
-Router.prototype.init = function(routes) {
-  this.routesServer = routes;
+Router.prototype.init = function() {
   this.mainPage.init();
 }
 
@@ -59,22 +54,16 @@ Router.prototype.init = function(routes) {
 /*
  * Callback for each route after push state.
  */
-Router.prototype.default = function (lang, section) {
+Router.prototype.default = function (lang_, slug_) {
 
-  var page = 'index';
+  var config = {lang: lang_};
 
-  if (section != null) {
+  if (slug_ != null) 
+    config.slug = slug_;
+  else
+    config.id = "index";
 
-    for (var stn in this.routesServer[lang]) {
-      
-      if (stn == section) {
-        page = this.routesServer[lang][stn];
-        break;
-      }
-    }
-  } 
-
-  Config.lang = lang;
+  var page = Config.getPage(config);
 
   this.mainPage.navigateTo(page);
 

@@ -1,9 +1,56 @@
-var $                 = require('jquery')
+// var $                 = require('zepto-browserify').$
 
 var Tools = new function (){
 
 	var _cache = {};
 	var _test_cache = {};
+
+  var has3d = false,
+      transformProperty = false,
+      transitionsEndProperty = false,
+      transformProperties = {
+            'webkitTransform':'-webkit-transform',
+            'OTransform':'-o-transform',
+            'msTransform':'-ms-transform',
+            'MozTransform':'-moz-transform',
+            'transform':'transform'
+        },
+        transitionsEnd = {
+        'transition':'transitionend',
+        'OTransition':'oTransitionEnd',
+        'MozTransition':'transitionend',
+        'WebkitTransition':'webkitTransitionEnd'
+      };
+
+  this.init = function() {
+
+    var h3d = undefined,
+      el  = document.createElement('p');
+
+    document.body.insertBefore(el, null);
+
+    //transform properties
+    for (var t in transformProperties) 
+    {
+        if (el.style[t] !== undefined) 
+        {
+            el.style[t] = "translate3d(1px,1px,1px)";
+            transformProperty = t;
+            h3d = window.getComputedStyle(el).getPropertyValue(transformProperties[t]);
+        }
+    }
+
+    //transiton end
+    for(var t in transitionsEnd){
+        if( el.style[t] !== undefined ){
+            transitionsEndProperty = transitionsEnd[t];
+        }
+    }
+
+    document.body.removeChild(el);
+
+    has3d = (h3d !== undefined && h3d.length > 0 && h3d !== "none");
+  }
 
 	this.clearResizeCache = function() {
 		_cache = {};
@@ -15,6 +62,17 @@ var Tools = new function (){
 		else return Const.LOCAL_BASEPATH+link;
 	}
 
+  this.lerp = function(a, b, u) {
+    return (1 - u) * a + u * b;
+  };
+
+  this.getTransformProperty      = function() { return transformProperty; };
+  this.getTransitionsEndProperty = function() { return transitionsEndProperty; };
+  this.has3d                     = function() { return has3d; };
+
+  this.getTransformProperty = function() { 
+    return transformProperty; 
+  }, 
 
 	this.setCookie = function(name, value, days) {
 		var expires;
@@ -79,6 +137,7 @@ var Tools = new function (){
     return content;
   };
   
+  /*
 	this.getPageDimension = function () {
 
 		var page = $(window);
@@ -88,6 +147,7 @@ var Tools = new function (){
 			h : page.height()
 		}
 	}
+  */
 
   this.popupwindow = function(url, title, w, h) {
       var left = (screen.width/2)-(w/2);
@@ -405,6 +465,7 @@ function relMouseCoords(event){
 
     return {x:canvasX, y:canvasY}
 }
+
 HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 module.exports = Tools;

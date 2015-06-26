@@ -1,46 +1,32 @@
 'use strict';
 
-var $                 = require('jquery'),
-    AbstractDOMView   = require('abstract/view/DOM/DOMView'),
+var AbstractDOMView   = require('abstract/view/DOM/DOMView'),
     Router            = require('router/router'),
     EVENT             = require('event/event'),
     Config            = require('config/config'),
-    Backbone          = require('backbone');
-
+    Analytics         = require('app/tools/analytics');
 
 
 /**
- * MenuView: Handles the menu display/trigers the nav
+ * MenuView: Handles the #menu display/trigers the nav
  * @extend {abstract/view/DOM/DOMview}
  * @constructor
  */
-var MenuView = AbstractDOMView.extend(new function (){
+var MenuView = function (options, datas){
 
   this.idView = 'menu';
-  this.id = "menu";
+  this.id     = "menu";
 
   this.events = {
     "click a": "onMenuClicked"
   }
 
-});
+  AbstractDOMView.call(this, options, datas);
 
+};
 
-
-/**
- * @override
- */
-MenuView.prototype.initDOM = function() {
-  this.$button = $('#menu-button');
-}
-
-
-/**
- * @override
- */
-MenuView.prototype.bindEvents = function() {
-  this.$button.on('click', _onButtonClick.bind(this));
-}
+_.extend(MenuView, AbstractDOMView);
+_.extend(MenuView.prototype, AbstractDOMView.prototype);
 
 
 /**
@@ -49,10 +35,16 @@ MenuView.prototype.bindEvents = function() {
  */
 MenuView.prototype.onMenuClicked = function(e) {
 
+  var $el = $(e.currentTarget),
+      id = $el.data('id');
+
   e.preventDefault();
 
-  var href = $(e.currentTarget).attr('href').replace(Config.baseUrl, '');
-  Backbone.history.navigate(href, { trigger: true })
+  this.currentHREF = $el.attr('href').replace(Config.baseUrl, '');
+
+  Backbone.history.navigate(this.currentHREF, { trigger: true });
+  this.currentHREF = null;
+
 }
 
 
@@ -67,13 +59,5 @@ MenuView.prototype.navigateById = function(id) {
 }
 
 
-/**
- * Callback to display the menu
- */
-var _onButtonClick = function() {
-  this.trigger(EVENT.TOGGLE_MENU);
-}
-
-
-
 module.exports = MenuView;
+

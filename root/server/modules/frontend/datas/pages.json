@@ -1,26 +1,35 @@
 {
 	"pages" : [
 		{
-			"name"    : "homepage",
-			"id"      : "homepage",
-			"body_class" : "",
-			"js_var"   : {},
+			"id": "mainpage",
+			"slug": "mainpage",
+			"assets"    : [],
+			"params": {}
+		},
+		{
+			"id": "homepage",
+			"parent": null,
+			"type": "page",
 			"priority": 1,
 			"hasLayout": false,
-			"assets"    : []
+			"assets"    : [],
+			"params": {}
 		},
 		{
-			"name"    : "index",
 			"id"      : "index",
-			"body_class" : "",
-			"js_var"   : {},
+			"parent": null,
+			"type": "page",
 			"priority": 0.80,
-			"assets"    : []
+			"assets"    : [{ "src":"/static/img/default/test.jpg", "type": "image"}],
+			"params": {}
 		},
 		{
-			"name"    : "about",
 			"id"      : "about",
-			"priority": 0.80
+			"parent": null,
+			"type": "page",
+			"priority": 0.80,
+			"assets"    : [{ "src":"/static/img/default/test.jpg", "type": "image"}],
+			"params": {}
 		}
 
 	]

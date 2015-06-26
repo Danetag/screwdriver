@@ -113,6 +113,15 @@ var controller = (function() {
 
     setMenu: function(req) {
       if (this.page == null) return;
+    },
+
+    getDatasAction: function(req, res) {
+      
+      res.setHeader('Content-Type', 'application/json');
+
+      var datas = require(config.frontend.translationPath + this.lang + '/' + this.page.id + '.json');
+
+      res.json(datas);
     }
 
   }

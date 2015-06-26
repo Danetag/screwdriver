@@ -1,15 +1,20 @@
 'use strict';
 
+// var $         = require('zepto-browserify').$,
+     
+//     Backbone  = require('backbone'),
+var EVENT     = require('event/event');
 
-var EVENT     = require('event/event'),
-    Config    = require('config/config')
+
 
 /**
  * View: Defines a view with basic methods
- * @extend {Backbone.View}
+ * @extend {PIXI.DisplayObjectContainer}
  * @constructor
  */
-var View = function (options, datas){
+var View = function (options_){
+
+  this.options = options_;
 
   /**
    * Object as associative array of all the <Timeline> objects
@@ -21,19 +26,7 @@ var View = function (options, datas){
    * Viewport object
    * @type {Object}
    */
-  this.viewport = {
-    width: 0,
-    height: 0
-  };
-
-  /**
-   * Mouse object
-   * @type {Object}
-   */
-  this.mouse = {
-    x:0,
-    y:0
-  }
+  this.viewport = {};
 
   /**
    * Can update the current view on request animation frame?
@@ -59,12 +52,10 @@ var View = function (options, datas){
    */
   this.canTriggerInit = (this.canTriggerInit != undefined) ? this.canTriggerInit : true;
 
-  Backbone.View.call(this, options, datas);
+  _.extend(this, Backbone.Events);
 
 };
 
-_.extend(View, Backbone.View);
-_.extend(View.prototype, Backbone.View.prototype);
 
 
 /**
@@ -72,18 +63,35 @@ _.extend(View.prototype, Backbone.View.prototype);
  *  Usefull when we have to wait for computer procesing, like canvas initialization for instance.
  */
 View.prototype.init = function() {
-  if (this.isInit) return;
-  
+
+  if (this.isInit) {
+    this.onInit();
+    return;
+  }
+
+  this.render();
   this.bindEvents();
+  this.resize();
 
   if (this.canTriggerInit)
     this.onInit();
 }
 
+
 View.prototype.onInit = function() {
+
   this.isInit = true;
+  this.canUpdate = true;
+
   this.trigger(EVENT.INIT);
 }
+
+
+
+View.prototype.render = function() {
+  
+}
+
 
 
 /**
@@ -106,7 +114,8 @@ View.prototype.unbindEvents = function() {
  * Called on request animation frame
  */
 View.prototype.update = function() {
-  if (this.canUpdate) this.onUpdate();
+  if (this.canUpdate)
+    this.onUpdate();
 }
 
 
@@ -116,13 +125,6 @@ View.prototype.update = function() {
  */
 View.prototype.resize = function(viewport) {
   this.viewport = (viewport != undefined) ? viewport : { width: $(document).width(), height:$(window).height() };
-
-  var scrollHeight = (document.body.scrollHeight) ? document.body.scrollHeight : document.documentElement.scrollHeight;
-  
-  if (scrollHeight > this.viewport.height && !Config.isIE) {
-    // has scrollbar
-    //this.viewport.width -= Config.scrollbarWidth;
-  }
 
   this.onResize();
 }
@@ -138,40 +140,6 @@ View.prototype.orientationChange = function(viewport) {
   this.onOrientationChange();
 }
 
-/**
- * Called on mouseMove
- * @param {Object} Mouse object with x and y properties
- */
-View.prototype.mouseMove = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
-  this.onMouseMove();
-}
-
-
-/**
- * Called on mouseDown
- * @param {Object} Mouse object with x and y properties
- */
-View.prototype.mouseDown = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
-  this.onMouseDown();
-}
-
-
-/**
- * Called on mouseUp
- * @param {Object} Mouse object with x and y properties
- */
-View.prototype.mouseUp = function(mouse) {
-  this.mouse.x = mouse.x;
-  this.mouse.y = mouse.y;
-
-  this.onMouseUp();
-}
 
 
 /**
@@ -184,42 +152,11 @@ View.prototype.onMouseOut = function(outWindow) {
 
 
 /**
- * Called on mouseMove
- */
-View.prototype.onMouseMove = function() {
-
-}
-
-
-/**
- * Called on mouseDown
- */
-View.prototype.onMouseDown = function() {
-
-}
-
-
-/**
- * Called on mouseDown
- */
-View.prototype.onMouseUp = function() {
-
-}
-
-
-/**
- * Callback on request Animation frame if the view can be updated (this.canUpdate)
- */
-View.prototype.onScroll = function() {
-
-}
-
-
-/**
  * Callback on request Animation frame if the view can be updated (this.canUpdate)
  */
 View.prototype.onUpdate = function() {
 
+  
 }
 
 
@@ -251,7 +188,6 @@ View.prototype.directShow = function() {
 }
 
 View.prototype.onShown = function() {
-  this.canUpdate = true;
   this.isShown = true;
   this.trigger(EVENT.SHOWN);
 }
@@ -264,38 +200,17 @@ View.prototype.hide = function() {
   this.onHidden();
 }
 
-/**
- * PreHide the view
- */
-View.prototype.preHide = function() {
-  this.onPreHidden();
-}
-
-View.prototype.onPreHidden = function() {
-  this.trigger(EVENT.PRE_HIDDEN);
-}
-
-
 View.prototype.directHide = function() {
   this.onHidden();
 }
 
 View.prototype.onHidden = function() {
+  
   this.isShown = false;
   this.trigger(EVENT.HIDDEN);
 }
 
 
-/**
- * Post hide the view
- */
-View.prototype.postHide = function() {
-  this.onPostHidden();
-}
-
-View.prototype.onPostHidden = function() {
-  this.trigger(EVENT.POST_HIDDEN);
-}
 
 /**
  * Dispose the view
@@ -308,9 +223,6 @@ View.prototype.dispose = function() {
 
   this.unbindEvents();
   this.destroyTL();
-  this.remove();
-
-  this.$el = null;
 }
 
 
@@ -331,6 +243,8 @@ View.prototype.killTL = function(name) {
   tl = null;
 
   this.TL[name] = null;
+
+  //console.log('View.prototype.killTL:after', name, this.TL[name]);
 
 }
 

@@ -1,22 +1,23 @@
 'use strict';
 
-var $                     = require('jquery'),
-    AbstractPageView      = require('abstract/view/DOM/page/pageView'),
-    AboutTpl              = require('about.html'),
-    dot                   = require('dot'),
-    _                     = require('underscore'),
-    Backbone              = require('backbone');
+var AbstractPageView      = require('abstract/view/DOM/page/pageView'),
+    AboutTpl              = require('about.html');
 
 
 
-var AboutView = AbstractPageView.extend(new function (){
+var AboutView = function (options, datas){
 
   this.idView = 'about';
   this.id = 'about';
 
-  this.template = dot.template(AboutTpl);
+  this.template = AboutTpl;
 
-});
+  AbstractPageView.call(this, options, datas);
+
+};
+
+_.extend(AboutView, AbstractPageView);
+_.extend(AboutView.prototype, AbstractPageView.prototype);
 
 
 module.exports = AboutView;
