@@ -2,6 +2,8 @@
 
 > HTML5 Boilerplate, gulp starter.
 
+![Screwdriver](https://dl.dropboxusercontent.com/u/15955146/screwdriver.jpg)
+
 ## Slush
 
 This is a Slush generator. First, install Slush globally with: 
