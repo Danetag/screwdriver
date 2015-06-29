@@ -310,7 +310,7 @@ AbstractPage.prototype.getCurrentDatas = function(itemLoader_, loader_) {
   }
 
   // Keep datas consistant
-  this.page.datasContent = this.datas;
+  this.page.datasContent = Immutable.Map(this.datas);
 
   //console.log('this.page.datasContent', this.page.datasContent);
 

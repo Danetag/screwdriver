@@ -19,6 +19,7 @@
 		},
 		"concatLib": {
 			"src": [
+					"app/scripts/vendor/immutable.js",
 					"app/scripts/vendor/modernizr.custom.js",
 					"app/scripts/vendor/detectizr.min.js",
 					"app/scripts/vendor/zepto.js",

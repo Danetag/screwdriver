@@ -238,6 +238,8 @@ var _currentPageViewShown = function() {
   this.loader.dispose();
   this.loader = null;
 
+  console.log('this.pageManager.currentPage.page', this.pageManager.currentPage.page);
+
   this.pageManager.currentPage.page.params.hasLoading = true;
 
   this.view.showSubviews();
