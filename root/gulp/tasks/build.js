@@ -3,7 +3,7 @@ var gulp 					= require('gulp'),
 
 gulp.task('build', function(cb){
 
-	runSequence('cleanDist','work','copy',
+	runSequence('cleanDist','work', 'iconfonts','copy',
 							['imgmin','minify','uglify'],
               cb);
 

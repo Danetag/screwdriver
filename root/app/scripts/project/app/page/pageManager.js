@@ -75,14 +75,15 @@ PageManager.prototype.navigateTo = function(page) {
     return;
   }
 
-  page.params = (page.params != undefined) ? page.params : {};
-  page.params.hasLoading = true;
 
   this.setCurrentPage(page);
+  //page.params.hasLoading = true;
 
-  // Starts here
-  _preHideOldPage.call(this);
-  
+  if (!page.params.hasLoading)
+    this.listenTo(this.currentPage, EVENT.CLEAN_CURRENT_CONTENT, _cleanCurrentContent.bind(this));
+
+  this.listenTo(this.currentPage, EVENT.LOADER_INIT, _currentPageLoaderInit.bind(this));
+  this.currentPage.init(page);
 }
 
 
@@ -91,6 +92,8 @@ PageManager.prototype.navigateTo = function(page) {
  * @param {Object} page of the page to navigate to.
  */
 PageManager.prototype.setCurrentPage = function(page) {
+
+  //page.params = (page.params != undefined) ? page.params : {};
 
   if (this.pages[page.id] == undefined) {
     console.log('PageManager:: Error: Please create a controller/view for the ' + page.id + ' ID, then register the page in the PageManager');
@@ -106,11 +109,6 @@ PageManager.prototype.setCurrentPage = function(page) {
 
   this.currentPage = new this.pages[page.id]();
 
-  if (!page.params.hasLoading)
-    this.listenTo(this.currentPage, EVENT.CLEAN_CURRENT_CONTENT, _cleanCurrentContent.bind(this));
-  
-  this.currentPage.init(page);
-  
 }
 
 
@@ -132,6 +130,12 @@ var _cleanCurrentContent = function(){
 }
 
 /** Transition logic **/
+
+var _currentPageLoaderInit = function() {
+  // Starts here
+  _preHideOldPage.call(this);
+
+}
 
 var _preHideOldPage = function() {
   this.listenToOnce(this.oldPage, EVENT.PRE_HIDDEN, _oldPagePreHidden.bind(this));
@@ -161,11 +165,13 @@ var _hideOldPage = function() {
   this.stopListening(this.oldPage, EVENT.LOADER_SHOWN, _currentPageLoaderShown.bind(this));
   this.stopListening(this.oldPage, EVENT.LOADER_COMPLETE, _currentPageLoaderComplete.bind(this));
   this.stopListening(this.oldPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
+  this.stopListening(this.oldPage, EVENT.LOADER_INIT, _currentPageLoaderInit.bind(this));
   this.stopListening(this.oldPage, EVENT.INIT, _currentPageViewInit.bind(this));
 
   this.listenToOnce(this.oldPage, EVENT.LOADER_SHOWN, _disposePage.bind(this));
   this.listenToOnce(this.oldPage, EVENT.LOADER_COMPLETE, _disposePage.bind(this));
   this.listenToOnce(this.oldPage, EVENT.LOADER_HIDDEN, _disposePage.bind(this));
+  this.listenToOnce(this.oldPage, EVENT.LOADER_INIT, _currentPageLoaderInit.bind(this));
   this.listenToOnce(this.oldPage, EVENT.INIT, _disposePage.bind(this));
 
   this.oldPage.hide(this.currentPage.page);
@@ -179,6 +185,8 @@ var _hideOldPage = function() {
 var _oldPageHidden = function() {
   _loadCurrentPage.call(this);
 }
+
+
 
 
 /**
@@ -252,6 +260,7 @@ var _oldPagePostHidden = function() {
   this.initCurrentView();
 }
 
+// For mainPage as well
 PageManager.prototype.initCurrentView = function() {
 
   //update title
@@ -271,9 +280,11 @@ PageManager.prototype.initCurrentView = function() {
  */
 var _currentPageViewInit = function() {
 
+  //force resize on the current view here
+  this.currentPage.view.onResize();
+
   if (this.currentPage.loader != null) {
     this.listenToOnce(this.currentPage, EVENT.LOADER_HIDDEN, _currentPageLoaderHidden.bind(this));
-
     this.currentPage.hideLoader();
 
   } else {
@@ -288,7 +299,6 @@ var _currentPageViewInit = function() {
  * @private
  */
 var _currentPageLoaderHidden = function() {
-
   this.listenToOnce(this.currentPage, EVENT.SHOWN, _currentPageViewShown.bind(this));
 
   this.currentPage.disposeLoader();
@@ -300,9 +310,7 @@ var _currentPageLoaderHidden = function() {
  * @private
  */
 var _currentPageViewShown = function() {
-
-  if (this.currentPage.page.id != "index")
-    Config.mainView.showSubviews();
+  this.trigger(EVENT.SHOWN);
 }
 
 

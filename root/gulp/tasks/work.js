@@ -3,6 +3,6 @@ var gulp 					= require('gulp'),
 
 gulp.task('work', function(cb, err){
 
-	return runSequence(['cleanJS', 'iconfonts', 'concatLib', 'buildJSProject', 'webp'], 'stylus', cb);
+	return runSequence(['cleanJS', 'concatLib', 'buildJSProject', 'webp'], 'stylus', cb);
   
 });

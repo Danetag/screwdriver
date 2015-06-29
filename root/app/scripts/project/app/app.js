@@ -72,12 +72,18 @@ var _loaderComplete = function(e) {
   this.loader = null;
 
   Config.init();
+
+  this.listenToOnce(Router, EVENT.INIT, _onRouterInit.bind(this));
   Router.init();
+}
+
+var _onRouterInit = function() {
 
   Backbone.history.start({
     pushState: true,
     root: Config.root
   });
+
 }
 
 

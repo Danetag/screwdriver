@@ -64,7 +64,8 @@ AbstractPage.prototype.init = function(page) {
 
   if ((this.page.params.hasLoading === undefined || this.page.params.hasLoading) && !this.isLoaded()) {
     this.initLoader();
-  }
+  } else
+    this.onLoaderInit();
   
 }
 
@@ -138,8 +139,14 @@ AbstractPage.prototype.viewInit = function() {
  */
 AbstractPage.prototype.initLoader = function() {
   this.loader = new Loader();
+
+  this.listenToOnce(this.loader, EVENT.INIT, this.onLoaderInit.bind(this))
   this.loader.init();
 
+}
+
+AbstractPage.prototype.onLoaderInit = function() {
+  this.trigger(EVENT.LOADER_INIT);
 }
 
 /**

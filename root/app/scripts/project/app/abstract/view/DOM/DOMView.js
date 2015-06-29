@@ -72,6 +72,13 @@ var DOMView = function (options, datas){
    */
   this.dataID =  (this.dataID != undefined) ? this.dataID : null;
 
+  /**
+   * array of subviews (children)
+   * @type {array.<DOMViews>}
+   */
+  this.aSubViews = [];
+
+
   AbstractView.call(this);
   Backbone.View.call(this, options, datas);
 
@@ -123,9 +130,6 @@ DOMView.prototype.init = function(params, assets) {
   this.appendToContainer();
 
   this.initSubViews();
-  this.onResize();
-
-  AbstractView.prototype.init.call(this);
 }
 
 
@@ -141,9 +145,35 @@ DOMView.prototype.initDOM = function() {
  * Handles the initialization of the sub views
  */
 DOMView.prototype.initSubViews = function() {
-
+  this.onSubViewsInit();
 }
 
+/**
+ * once all the subviews are init as well
+ */
+DOMView.prototype.onSubViewsInit = function() {
+
+  var check = true;
+
+  for (var i in this.aSubViews) {
+    var subView = this.aSubViews[i]
+    if (!subView.isInit) check = false;
+  }
+
+  if (check) {
+    this.allInit();
+  }
+  
+}
+
+
+DOMView.prototype.allInit = function() {
+
+  this.assets = null;
+
+  // call super init here to trigger the init event
+  AbstractView.prototype.init.call(this);
+}
 
 /**
  * @override
@@ -251,17 +281,16 @@ DOMView.prototype.stopingPlayingMedia = function(e) {
   this.trigger(EVENT.ON_STOP, {mediaID: e.mediaID});
 }
 
-/*
-DOMView.prototype.pausingPlayingVideo = function(e) {
-  console.log("[DOMView] -- function pausingPlayingVideo -- trigger ON_PAUSE");
-  this.trigger(EVENT.ON_PAUSE);
-}
+DOMView.prototype.onResize = function() {
 
-
-DOMView.prototype.startPlayingAudio = function(id_) {
+  for (var i in this.aSubViews) {
+    var subView = this.aSubViews[i];
+    subView.onResize();
+  }
   
 }
-*/
+
+
 
 /**
  * Generate the DOM element based on the provided template. 
@@ -346,6 +375,15 @@ DOMView.prototype.getAssetsByID = function(assets, ID) {
  * @override
  */
 DOMView.prototype.dispose = function() {
+
+  // Kill al the subViews
+  for (var i in this.aSubViews) {
+    var subView = this.aSubViews[i];
+    subView.dispose();
+  }
+
+  this.aSubViews.length = 0;
+  this.aSubViews = [];
 
   // Kill all parameters, like assets references
   this.params = null;

@@ -13,6 +13,7 @@ var Event = {
   'LOADER_SHOWN':'loader_shown',
   'LOADER_HIDDEN':'loader_hidden',
   'LOADER_COMPLETE':'loader_complete',
+  'LOADER_INIT':'loader_init',
   
   // DOM
   'ON_ORIENTATION_CHANGE': 'on_orientation_change',

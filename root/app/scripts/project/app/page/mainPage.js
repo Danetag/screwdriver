@@ -69,7 +69,7 @@ MainPage.prototype.init = function() {
  */
 MainPage.prototype.instanceView = function() {
 
-  this.view = new MainView({isViewContainer:true});
+  this.view = MainView; //new MainView({isViewContainer:true});
 
   // Bind the main events now
   this.view.bindMainEvents();
@@ -84,12 +84,55 @@ MainPage.prototype.instanceView = function() {
  */
 MainPage.prototype.initLoader = function() {
   this.loader = new Loader();
-  this.loader.init(new LoaderViewMain());
 
-  // Force resize to have the actual browser size available
-  this.view.forceResize();
+  this.listenToOnce(this.loader, EVENT.INIT, this.onLoaderInit.bind(this))
+  this.loader.init(new LoaderViewMain());
 }
 
+/*
+ * @override
+ */
+MainPage.prototype.onLoaderInit = function() {
+  // Force resize to have the actual browser size available
+  this.view.forceResize();
+
+  this.trigger(EVENT.LOADER_INIT);
+}
+
+
+
+/*
+ * Navigate to a page. Basically called form the router.
+ */
+MainPage.prototype.navigateTo = function(page) {
+
+  if (!this.firstTime) {
+    this.pageManager.navigateTo(page);
+  } else {
+
+    this.firstTime = false;
+
+    if (page == null || page == undefined) {
+      console.log("The page wasn't found in the Config.getPage() function");
+      return;
+    }
+
+    page.params = (page.params != undefined) ? page.params : {};
+
+    //no loading for the current Page, the main Page takes care of it
+    page.params.hasLoading = false;
+
+    this.pageManager.setCurrentPage(page);
+
+    this.listenToOnce(this.pageManager.currentPage, EVENT.LOADER_INIT, _currentPageLoaderInit.bind(this));
+    this.pageManager.currentPage.init(page);
+  }
+}
+
+// Now we start loading stuff
+var _currentPageLoaderInit = function() {
+  this.load();
+}
 
 /*
  * @override
@@ -116,35 +159,6 @@ MainPage.prototype.initDatas = function() {
 }
 
 
-/*
- * Navigate to a page. Basically called form the router.
- */
-MainPage.prototype.navigateTo = function(page) {
-
-  if (!this.firstTime) {
-    this.pageManager.navigateTo(page);
-  } else {
-
-    this.firstTime = false;
-
-    if (page == null || page == undefined) {
-      console.log("The page wasn't found in the Config.getPage() function");
-      return;
-    }
-
-    page.params = (page.params != undefined) ? page.params : {};
-
-    //no loading for the current Page, the main Page takes care of it
-    page.params.hasLoading = false;
-
-    this.pageManager.setCurrentPage(page);
-
-    this.load();
-    
-  }
-}
-
-
 MainPage.prototype.cleanCurrentContent = function() {
   this.view.cleanCurrentContent();
 }
@@ -163,8 +177,6 @@ MainPage.prototype.loaderComplete = function() {
 
   // This page is loaded now.
   this.pageManager.currentPage.setIsLoaded(true);
-
-  // console.log("mainpage page", this.page)
 
   // Init Main View
   this.listenToOnce(this.view, EVENT.INIT, _mainPageViewInit.bind(this));
@@ -188,6 +200,10 @@ var _mainPageViewInit = function() {
  * @private
  */
 var _currentPageViewInit = function() {
+
+  // Force resize here for the current view
+  this.pageManager.currentPage.view.onResize();
+
   this.listenToOnce(this.loader.loaderView, EVENT.HIDDEN, _loaderHidden.bind(this));
   this.loader.loaderView.hide();
 }
@@ -278,6 +294,9 @@ var _onOrientationChange = function(e) {
   }
 }
 
+var _forceResize = function() {
+  this.view.forceResize();
+}
 
 /*
  * On resize

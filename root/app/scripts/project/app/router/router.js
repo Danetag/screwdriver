@@ -1,6 +1,7 @@
 'use strict';
 
 var Config     = require('config/config'),
+    EVENT      = require('event/event'),
     MainPage   = require('page/mainPage');
     
 
@@ -47,7 +48,12 @@ Router.prototype.initialize = function(){
  * Handles the init
  */
 Router.prototype.init = function() {
+  this.listenToOnce(this.mainPage, EVENT.LOADER_INIT, _onMainPageInit.bind(this));
   this.mainPage.init();
+}
+
+var _onMainPageInit = function() {
+  this.trigger(EVENT.INIT);
 }
 
 

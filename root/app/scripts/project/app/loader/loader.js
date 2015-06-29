@@ -31,7 +31,6 @@ var Loader = function (){
 Loader.prototype.init = function(loaderView) {
 
   this.loaderView = (loaderView != undefined) ? loaderView : new LoaderViewBasic();
-  this.loaderView.init();
 
   this.items = []; 
   this.queue  = new createjs.LoadQueue(true);
@@ -45,6 +44,13 @@ Loader.prototype.init = function(loaderView) {
 
   this.bindEvents();
 
+  this.listenToOnce(this.loaderView, EVENT.INIT, _loaderInit.bind(this));
+  this.loaderView.init();
+
+}
+
+var _loaderInit = function() {
+  this.trigger(EVENT.INIT);
 }
 
 Loader.prototype.bindEvents = function () {

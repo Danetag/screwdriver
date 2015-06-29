@@ -109,10 +109,11 @@ MainView.prototype.initDOM = function() {
 MainView.prototype.initSubViews = function() {
   
   this.menuView = new MenuView({el: $("#menu")});
-  this.menuView.init();
+  this.aSubViews.push(this.menuView);
 
-  // Destroy assets references
-  this.assets = null;
+  this.listenToOnce(this.menuView, EVENT.INIT, this.onSubViewsInit.bind(this))
+  this.menuView.init();
+  
 }
 
 
@@ -244,8 +245,6 @@ var _onResize = function() {
   CV.viewport.width = $(document).width()
   CV.viewport.height = $(window).height();
 
-  console.log('MainResize:CV', CV.viewport);
-
   this.onResize();
   this.trigger(EVENT.ON_RESIZE);
 
@@ -340,4 +339,4 @@ var _onMouseUp = function(e) {
 
 
 
-module.exports = MainView;
+module.exports = new MainView({isViewContainer: true});
